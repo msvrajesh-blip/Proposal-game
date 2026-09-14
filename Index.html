@@ -8,2785 +8,1994 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-
-:root {
-  --bg-cream:#fdfbf7;
-  --bg-rose:#fbf0f0;
-  --accent-rose:#e8989a;
-  --accent-rose-deep:#c86b6e;
-  --accent-gold:#d4af37;
-  --accent-lavender:#b59bd3;
-  --accent-mint:#88c0a8;
-
-  --text-dark:#3a2e39;
-  --text-muted:#7a6b79;
-  --text-light:#9c8a9b;
-
-  --glass-bg:rgba(255,255,255,.82);
-  --glass-border:rgba(255,255,255,.95);
-  --glass-shadow:0 12px 40px rgba(180,140,160,.12);
-
-  --font-serif:'Cormorant Garamond',Georgia,serif;
-  --font-sans:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;
-
-  --radius-lg:24px;
-  --radius-md:16px;
-  --radius-sm:12px;
-
-  --transition-smooth:all .6s cubic-bezier(.16,1,.3,1);
+:root{
+    --ink:#3a2e39;
+    --soft-ink:#695866;
+    --paper:#f8f2ec;
+    --rose:#e9b9bd;
+    --rose-dark:#c98591;
+    --lavender:#cfc5e7;
+    --gold:#c9a35f;
+    --cream:#fffaf5;
+    --white:rgba(255,255,255,.72);
+    --shadow:0 25px 70px rgba(72,47,62,.13);
+    --radius:28px;
 }
 
-* {
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  -webkit-tap-highlight-color:transparent;
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
 }
 
-html {
-  scroll-behavior:smooth;
-  background:var(--bg-cream);
-  color:var(--text-dark);
-  font-family:var(--font-sans);
-  overflow-x:hidden;
-  width:100%;
+html{
+    scroll-behavior:smooth;
 }
 
-body {
-  position:relative;
-  min-height:100vh;
-  width:100%;
-  overflow-x:hidden;
-  line-height:1.6;
+body{
+    font-family:"Plus Jakarta Sans",sans-serif;
+    background:
+        radial-gradient(circle at 15% 10%,rgba(233,185,189,.28),transparent 28%),
+        radial-gradient(circle at 85% 20%,rgba(207,197,231,.35),transparent 30%),
+        linear-gradient(135deg,#fbf5ef,#f5edf1 50%,#f8f2ec);
+    color:var(--ink);
+    overflow-x:hidden;
 }
 
-/* BACKGROUND */
-
-#ambient-canvas {
-  position:fixed;
-  top:0;
-  left:0;
-  width:100vw;
-  height:100vh;
-  pointer-events:none;
-  z-index:0;
+canvas#ambientCanvas{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    z-index:0;
 }
 
-.bg-gradient-blobs {
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:-1;
-  overflow:hidden;
+a{
+    color:inherit;
+    text-decoration:none;
 }
 
-.blob {
-  position:absolute;
-  border-radius:50%;
-  filter:blur(80px);
-  opacity:.4;
-  animation:floatBlob 20s infinite ease-in-out alternate;
+button{
+    font-family:inherit;
 }
 
-.blob-1 {
-  top:-10%;
-  left:-10%;
-  width:50vw;
-  height:50vw;
-  background:#fae1e3;
+#app{
+    position:relative;
+    z-index:1;
 }
 
-.blob-2 {
-  top:30%;
-  right:-10%;
-  width:45vw;
-  height:45vw;
-  background:#ede3f7;
-  animation-delay:-5s;
+/* NAVIGATION */
+
+.top-nav{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    z-index:100;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 5vw;
+    background:rgba(248,242,236,.62);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    border-bottom:1px solid rgba(255,255,255,.5);
 }
 
-.blob-3 {
-  bottom:-10%;
-  left:10%;
-  width:50vw;
-  height:50vw;
-  background:#fff0db;
-  animation-delay:-10s;
+.brand{
+    font-family:"Cormorant Garamond",serif;
+    font-size:1.15rem;
+    font-weight:700;
+    letter-spacing:.18em;
 }
 
-@keyframes floatBlob {
-  0% {transform:translate(0,0) scale(1);}
-  50% {transform:translate(30px,40px) scale(1.08);}
-  100% {transform:translate(-20px,20px) scale(.95);}
+.progress-dots{
+    display:flex;
+    gap:8px;
+    align-items:center;
 }
 
-/* MUSIC BUTTON */
-
-.bgm-float-btn {
-  position:fixed;
-  bottom:24px;
-  right:24px;
-  width:52px;
-  height:52px;
-  border-radius:50%;
-  background:rgba(255,255,255,.9);
-  border:1px solid var(--accent-rose);
-  backdrop-filter:blur(10px);
-  box-shadow:0 8px 25px rgba(232,152,154,.35);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:1.3rem;
-  cursor:pointer;
-  z-index:200;
-  transition:all .3s ease;
+.progress-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:rgba(58,46,57,.18);
+    transition:.4s ease;
 }
 
-.bgm-float-btn.playing {
-  animation:pulseMusic 2s infinite ease-in-out;
-  background:var(--accent-rose-deep);
-  color:white;
+.progress-dot.active{
+    width:24px;
+    border-radius:20px;
+    background:var(--rose-dark);
 }
 
-@keyframes pulseMusic {
-  0%,100% {
-    transform:scale(1);
-    box-shadow:0 8px 25px rgba(232,152,154,.4);
-  }
-  50% {
-    transform:scale(1.1);
-    box-shadow:0 12px 30px rgba(232,152,154,.7);
-  }
+/* MUSIC */
+
+.bgm-button{
+    position:fixed;
+    right:22px;
+    bottom:22px;
+    z-index:150;
+    width:52px;
+    height:52px;
+    border:none;
+    border-radius:50%;
+    background:rgba(255,255,255,.78);
+    box-shadow:0 12px 35px rgba(70,45,60,.18);
+    backdrop-filter:blur(15px);
+    cursor:pointer;
+    font-size:1.15rem;
+    transition:.3s ease;
 }
 
-/* HEADER */
-
-header.top-bar {
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  padding:16px 24px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  z-index:100;
-  background:rgba(253,251,247,.8);
-  backdrop-filter:blur(12px);
-  border-bottom:1px solid rgba(255,255,255,.6);
+.bgm-button:hover{
+    transform:translateY(-3px) scale(1.04);
 }
 
-.brand-logo {
-  font-family:var(--font-serif);
-  font-size:1.1rem;
-  font-weight:600;
-  letter-spacing:.15em;
-  color:var(--accent-rose-deep);
-  text-transform:uppercase;
+.bgm-button.playing{
+    box-shadow:
+        0 0 0 7px rgba(201,163,95,.12),
+        0 12px 35px rgba(70,45,60,.18);
 }
 
-.progress-wrapper {
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.progress-text {
-  font-size:.75rem;
-  letter-spacing:.1em;
-  color:var(--text-muted);
-  font-weight:500;
-  text-transform:uppercase;
-}
-
-.progress-dots {
-  display:flex;
-  gap:6px;
-}
-
-.dot {
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:rgba(180,150,170,.3);
-  transition:all .4s ease;
-}
-
-.dot.active {
-  background:var(--accent-rose-deep);
-  transform:scale(1.3);
-}
-
-.dot.completed {
-  background:var(--accent-gold);
-}
-
-/* CONTENT */
-
-main.content-wrapper {
-  position:relative;
-  z-index:1;
-  max-width:680px;
-  margin:0 auto;
-  padding:90px 20px 120px;
-  display:flex;
-  flex-direction:column;
-  gap:50px;
-}
-
-.story-section {
-  position:relative;
-  width:100%;
-  min-height:70vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  transition:var(--transition-smooth);
-}
-
-.story-section.is-locked {
-  filter:blur(14px);
-  opacity:.25;
-  pointer-events:none;
-  user-select:none;
-  transform:scale(.97);
-}
-
-.story-section.is-unlocked {
-  filter:blur(0);
-  opacity:1;
-  pointer-events:auto;
-  transform:scale(1);
-  animation:bloomIn .8s cubic-bezier(.16,1,.3,1) forwards;
-}
-
-@keyframes bloomIn {
-  0% {
+.music-toast{
+    position:fixed;
+    right:22px;
+    bottom:88px;
+    z-index:151;
+    max-width:280px;
+    padding:12px 16px;
+    border-radius:15px;
+    background:rgba(58,46,57,.94);
+    color:white;
+    font-size:.75rem;
+    line-height:1.5;
     opacity:0;
-    transform:scale(.95) translateY(20px);
-    filter:blur(10px);
-  }
-  100% {
+    transform:translateY(12px);
+    pointer-events:none;
+    transition:.3s ease;
+}
+
+.music-toast.show{
     opacity:1;
-    transform:scale(1) translateY(0);
-    filter:blur(0);
-  }
+    transform:translateY(0);
 }
 
-/* CARDS */
+/* GENERAL */
 
-.glass-card {
-  background:var(--glass-bg);
-  backdrop-filter:blur(16px);
-  border:1px solid var(--glass-border);
-  border-radius:var(--radius-lg);
-  padding:40px 28px;
-  box-shadow:var(--glass-shadow);
-  width:100%;
-  position:relative;
-  overflow:hidden;
+section{
+    min-height:100vh;
+    padding:120px 7vw 90px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
 }
 
-.glass-card::before {
-  content:'';
-  position:absolute;
-  top:0;
-  left:0;
-  right:0;
-  height:3px;
-  background:linear-gradient(
-    90deg,
-    transparent,
-    var(--accent-rose),
-    transparent
-  );
+.container{
+    width:min(1050px,100%);
+    margin:auto;
 }
 
-/* TYPOGRAPHY */
-
-.section-label {
-  font-size:.75rem;
-  letter-spacing:.22em;
-  text-transform:uppercase;
-  color:var(--accent-rose-deep);
-  font-weight:600;
-  margin-bottom:12px;
-  display:block;
+.eyebrow{
+    text-transform:uppercase;
+    letter-spacing:.28em;
+    font-size:.68rem;
+    font-weight:700;
+    color:var(--rose-dark);
+    margin-bottom:15px;
 }
 
-.section-heading {
-  font-family:var(--font-serif);
-  font-size:2.3rem;
-  font-weight:500;
-  color:var(--text-dark);
-  line-height:1.2;
-  margin-bottom:16px;
+.title{
+    font-family:"Cormorant Garamond",serif;
+    font-size:clamp(3.2rem,8vw,7rem);
+    line-height:.9;
+    font-weight:600;
 }
 
-.section-subtext {
-  font-size:.95rem;
-  color:var(--text-muted);
-  font-weight:400;
-  max-width:440px;
-  margin:0 auto 24px;
-  line-height:1.6;
+.subtitle{
+    margin-top:25px;
+    max-width:620px;
+    color:var(--soft-ink);
+    line-height:1.8;
+    font-size:.98rem;
 }
 
-/* BUTTONS */
+/* HERO */
 
-.btn-primary {
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
-  background:linear-gradient(
-    135deg,
-    var(--accent-rose),
-    var(--accent-rose-deep)
-  );
-  color:white;
-  border:none;
-  padding:16px 36px;
-  border-radius:30px;
-  font-size:.95rem;
-  font-weight:500;
-  letter-spacing:.08em;
-  cursor:pointer;
-  box-shadow:0 8px 25px rgba(232,152,154,.4);
-  transition:all .3s ease;
+.hero{
+    min-height:100vh;
+    text-align:center;
+    overflow:hidden;
 }
 
-.btn-primary:active {
-  transform:scale(.97);
+.hero-content{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
 }
 
-.btn-secondary {
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  background:rgba(255,255,255,.95);
-  color:var(--text-dark);
-  border:1px solid rgba(212,175,55,.4);
-  padding:14px 28px;
-  border-radius:30px;
-  font-size:.88rem;
-  font-weight:500;
-  letter-spacing:.05em;
-  cursor:pointer;
-  transition:all .3s ease;
-  box-shadow:0 4px 15px rgba(0,0,0,.03);
+.hero-orbit{
+    position:absolute;
+    width:500px;
+    height:500px;
+    border:1px solid rgba(201,163,95,.18);
+    border-radius:50%;
+    animation:spin 25s linear infinite;
 }
 
-.btn-secondary:active {
-  transform:scale(.97);
+.hero-orbit:before,
+.hero-orbit:after{
+    content:"";
+    position:absolute;
+    border-radius:50%;
 }
 
-/* TOAST */
-
-.feedback-toast {
-  margin:16px auto 0;
-  padding:8px 18px;
-  background:rgba(58,46,57,.9);
-  color:#fff;
-  border-radius:20px;
-  font-size:.82rem;
-  opacity:0;
-  transform:translateY(10px);
-  transition:all .3s ease;
-  pointer-events:none;
-  width:fit-content;
+.hero-orbit:before{
+    width:10px;
+    height:10px;
+    background:var(--gold);
+    top:30px;
+    left:90px;
+    box-shadow:0 0 25px rgba(201,163,95,.6);
 }
 
-.feedback-toast.show {
-  opacity:1;
-  transform:translateY(0);
+.hero-orbit:after{
+    width:7px;
+    height:7px;
+    background:var(--rose-dark);
+    right:40px;
+    bottom:90px;
 }
 
-/* GAME 1 */
-
-.star-collector-arena {
-  position:relative;
-  width:100%;
-  height:220px;
-  background:rgba(255,245,248,.6);
-  border:1px dashed rgba(232,152,154,.5);
-  border-radius:var(--radius-md);
-  overflow:hidden;
-  margin:20px 0;
+@keyframes spin{
+    to{transform:rotate(360deg)}
 }
 
-.floating-star-target {
-  position:absolute;
-  width:48px;
-  height:48px;
-  border-radius:50%;
-  background:white;
-  border:1px solid var(--accent-rose);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:1.4rem;
-  cursor:pointer;
-  box-shadow:0 4px 15px rgba(232,152,154,.3);
-  transition:transform .2s ease,opacity .3s ease;
-  animation:floatStar 4s infinite ease-in-out alternate;
+.hero .eyebrow{
+    position:relative;
+    z-index:2;
 }
 
-@keyframes floatStar {
-  0% {
-    transform:translateY(0) rotate(0deg);
-  }
-  100% {
-    transform:translateY(-20px) rotate(15deg);
-  }
+.hero .title{
+    position:relative;
+    z-index:2;
 }
 
-/* GAME 2 */
-
-.memory-grid-compact {
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:12px;
-  margin:24px 0;
+.hero .subtitle{
+    position:relative;
+    z-index:2;
+    text-align:center;
 }
 
-.memory-card {
-  aspect-ratio:1;
-  position:relative;
-  transform-style:preserve-3d;
-  transition:transform .5s cubic-bezier(.175,.885,.32,1.275);
-  cursor:pointer;
+.primary-button{
+    margin-top:35px;
+    border:none;
+    padding:17px 30px;
+    border-radius:999px;
+    background:var(--ink);
+    color:#fff;
+    font-size:.76rem;
+    font-weight:700;
+    letter-spacing:.16em;
+    cursor:pointer;
+    box-shadow:0 15px 35px rgba(58,46,57,.2);
+    transition:.3s ease;
 }
 
-.memory-card.flipped {
-  transform:rotateY(180deg);
+.primary-button:hover{
+    transform:translateY(-3px);
+    box-shadow:0 20px 45px rgba(58,46,57,.25);
 }
 
-.memory-card.matched {
-  transform:rotateY(180deg) scale(.95);
-  opacity:.85;
-  cursor:default;
+/* MEMORY */
+
+.memory{
+    min-height:auto;
+    padding-top:60px;
+    padding-bottom:60px;
 }
 
-.card-face {
-  position:absolute;
-  width:100%;
-  height:100%;
-  backface-visibility:hidden;
-  border-radius:var(--radius-sm);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  box-shadow:0 4px 15px rgba(0,0,0,.04);
+.memory-card{
+    width:min(850px,100%);
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:30px;
+    align-items:center;
+    padding:25px;
+    border-radius:var(--radius);
+    background:var(--white);
+    backdrop-filter:blur(20px);
+    box-shadow:var(--shadow);
+    border:1px solid rgba(255,255,255,.7);
 }
 
-.card-back {
-  background:linear-gradient(135deg,#fff0f3,#f0e6f5);
-  border:1px solid rgba(212,175,55,.4);
-  color:var(--accent-gold);
-  font-size:1.4rem;
+.memory-image{
+    width:100%;
+    aspect-ratio:4/3;
+    object-fit:cover;
+    border-radius:22px;
 }
 
-.card-front {
-  background:white;
-  border:1px solid var(--accent-rose);
-  transform:rotateY(180deg);
-  font-size:2rem;
+.memory-text{
+    padding:10px;
 }
 
-/* GAME 3 */
-
-.lock-display {
-  display:flex;
-  justify-content:center;
-  gap:12px;
-  margin:20px 0 16px;
+.memory-text h2{
+    font-family:"Cormorant Garamond",serif;
+    font-size:2.6rem;
+    margin-bottom:12px;
 }
 
-.lock-digit {
-  width:50px;
-  height:60px;
-  border-radius:var(--radius-sm);
-  background:white;
-  border:2px solid rgba(220,200,210,.6);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-family:var(--font-serif);
-  font-size:1.8rem;
-  font-weight:600;
+.memory-text p{
+    color:var(--soft-ink);
+    line-height:1.8;
 }
 
-.lock-digit.active {
-  border-color:var(--accent-rose-deep);
-  box-shadow:0 0 12px rgba(232,152,154,.3);
+/* GAME */
+
+.game-section{
+    min-height:100vh;
 }
 
-.keypad-grid {
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-  max-width:240px;
-  margin:0 auto;
+.game-card{
+    width:min(850px,100%);
+    background:rgba(255,255,255,.64);
+    backdrop-filter:blur(22px);
+    border:1px solid rgba(255,255,255,.72);
+    border-radius:32px;
+    padding:40px;
+    box-shadow:var(--shadow);
+    text-align:center;
 }
 
-.keypad-btn {
-  padding:12px 0;
-  border-radius:var(--radius-sm);
-  background:white;
-  border:1px solid rgba(232,152,154,.2);
-  font-size:1.1rem;
-  font-weight:500;
-  color:var(--text-dark);
-  cursor:pointer;
+.game-number{
+    font-family:"Cormorant Garamond",serif;
+    color:var(--gold);
+    font-size:1.1rem;
 }
 
-.keypad-btn:active {
-  background:var(--bg-rose);
+.game-card h2{
+    font-family:"Cormorant Garamond",serif;
+    font-size:3.2rem;
+    margin:8px 0 10px;
 }
 
-/* PHOTO */
-
-.photo-card-frame {
-  background:white;
-  padding:14px 14px 20px;
-  border-radius:var(--radius-md);
-  box-shadow:0 12px 30px rgba(150,120,130,.12);
-  border:1px solid rgba(240,230,235,.8);
-  transform:rotate(-1deg);
-  margin:20px 0;
+.game-card > p{
+    color:var(--soft-ink);
+    line-height:1.7;
 }
 
-.photo-card-img {
-  width:100%;
-  height:250px;
-  border-radius:var(--radius-sm);
-  object-fit:cover;
-  display:block;
+/* STAR GAME */
+
+.star-field{
+    position:relative;
+    height:360px;
+    margin-top:30px;
+    border-radius:24px;
+    overflow:hidden;
+    background:
+        radial-gradient(circle at 30% 30%,rgba(233,185,189,.28),transparent 25%),
+        radial-gradient(circle at 75% 65%,rgba(207,197,231,.35),transparent 25%),
+        rgba(255,250,245,.55);
+    border:1px solid rgba(255,255,255,.75);
 }
 
-.photo-card-caption {
-  margin-top:14px;
-  font-family:var(--font-serif);
-  font-style:italic;
-  font-size:1.1rem;
-  color:var(--text-dark);
+.star{
+    position:absolute;
+    width:48px;
+    height:48px;
+    border:none;
+    border-radius:50%;
+    background:rgba(255,255,255,.8);
+    box-shadow:0 8px 30px rgba(201,163,95,.25);
+    cursor:pointer;
+    font-size:1.25rem;
+    transition:.3s ease;
+    animation:floatStar 3s ease-in-out infinite;
+}
+
+.star:hover{
+    transform:scale(1.2);
+}
+
+.star.caught{
+    opacity:0;
+    transform:scale(2);
+    pointer-events:none;
+}
+
+.star:nth-child(1){left:12%;top:20%;animation-delay:.2s}
+.star:nth-child(2){left:68%;top:18%;animation-delay:.8s}
+.star:nth-child(3){left:35%;top:55%;animation-delay:1.2s}
+.star:nth-child(4){left:78%;top:67%;animation-delay:.4s}
+
+@keyframes floatStar{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-13px)}
+}
+
+.game-status{
+    margin-top:20px;
+    font-size:.78rem;
+    color:var(--soft-ink);
+}
+
+/* MEMORY MATCH */
+
+.match-board{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+    max-width:470px;
+    margin:30px auto 0;
+}
+
+.memory-card-game{
+    aspect-ratio:1;
+    border:none;
+    border-radius:18px;
+    cursor:pointer;
+    background:transparent;
+    perspective:800px;
+}
+
+.memory-inner{
+    width:100%;
+    height:100%;
+    position:relative;
+    transform-style:preserve-3d;
+    transition:transform .55s ease;
+}
+
+.memory-card-game.flipped .memory-inner,
+.memory-card-game.matched .memory-inner{
+    transform:rotateY(180deg);
+}
+
+.memory-front,
+.memory-back{
+    position:absolute;
+    inset:0;
+    border-radius:18px;
+    backface-visibility:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.memory-front{
+    background:linear-gradient(135deg,#f4d9db,#ddd3ed);
+    font-family:"Cormorant Garamond",serif;
+    font-size:1.7rem;
+}
+
+.memory-back{
+    background:rgba(255,255,255,.9);
+    transform:rotateY(180deg);
+    font-size:2rem;
+}
+
+/* RIDDLE */
+
+.riddle-box{
+    margin-top:30px;
+    padding:30px;
+    border-radius:24px;
+    background:rgba(255,250,245,.72);
+}
+
+.riddle-question{
+    font-family:"Cormorant Garamond",serif;
+    font-size:2rem;
+    line-height:1.25;
+    margin-bottom:25px;
+}
+
+.code-input{
+    width:180px;
+    padding:15px 18px;
+    border:1px solid rgba(58,46,57,.15);
+    border-radius:15px;
+    background:#fff;
+    text-align:center;
+    font-size:1.2rem;
+    letter-spacing:.2em;
+    outline:none;
+}
+
+.code-input:focus{
+    border-color:var(--rose-dark);
+    box-shadow:0 0 0 4px rgba(201,133,145,.1);
 }
 
 /* DOOR */
 
-.door-wrapper {
-  width:160px;
-  height:240px;
-  margin:24px auto;
-  perspective:1000px;
-  position:relative;
+.door-section{
+    text-align:center;
 }
 
-.door-frame {
-  width:100%;
-  height:100%;
-  background:linear-gradient(135deg,#eed5d1,#dfc2d5);
-  border-radius:90px 90px 10px 10px;
-  border:3px solid #fff;
-  position:relative;
-  overflow:hidden;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  box-shadow:0 15px 35px rgba(180,140,160,.2);
+.door{
+    width:240px;
+    height:360px;
+    margin:30px auto;
+    border-radius:130px 130px 18px 18px;
+    background:
+        linear-gradient(135deg,#ead3bd,#b98774);
+    box-shadow:
+        inset 10px 0 25px rgba(255,255,255,.2),
+        inset -15px 0 30px rgba(80,45,45,.12),
+        0 30px 60px rgba(70,45,50,.2);
+    position:relative;
+    cursor:pointer;
+    transition:.7s ease;
 }
 
-.door-leaf {
-  position:absolute;
-  inset:0;
-  background:linear-gradient(135deg,#fff,#f7eae8);
-  border-radius:86px 86px 8px 8px;
-  transform-origin:left;
-  transition:transform 1.5s cubic-bezier(.25,1,.5,1);
-  display:flex;
-  align-items:center;
-  justify-content:flex-end;
-  padding-right:18px;
-  border-right:1px solid rgba(212,175,55,.4);
+.door:before{
+    content:"";
+    position:absolute;
+    inset:20px;
+    border:1px solid rgba(255,255,255,.35);
+    border-radius:115px 115px 12px 12px;
 }
 
-.door-knob {
-  width:14px;
-  height:14px;
-  border-radius:50%;
-  background:var(--accent-gold);
+.door-knob{
+    position:absolute;
+    right:35px;
+    top:52%;
+    width:15px;
+    height:15px;
+    border-radius:50%;
+    background:var(--gold);
+    box-shadow:0 0 15px rgba(201,163,95,.5);
 }
 
-.door-wrapper.open .door-leaf {
-  transform:rotateY(-110deg);
+.door.open{
+    transform:perspective(900px) rotateY(-65deg);
+    transform-origin:left;
+    opacity:.7;
 }
 
 /* LETTER */
 
-#final-letter-section {
-  width:100%;
-  display:none;
-  opacity:0;
-  transition:opacity 1.2s ease;
+.letter-section{
+    min-height:100vh;
+    display:none;
 }
 
-#final-letter-section.show {
-  display:block;
-  opacity:1;
+.letter-section.visible{
+    display:flex;
 }
 
-.digital-envelope-card {
-  background:#fdfbf7;
-  border:1px solid rgba(212,175,55,.35);
-  border-radius:var(--radius-lg);
-  padding:44px 24px;
-  box-shadow:0 20px 60px rgba(180,130,150,.18);
-  position:relative;
-  background-image:radial-gradient(
-    rgba(212,175,55,.08) 1px,
-    transparent 0
-  );
-  background-size:24px 24px;
-  text-align:center;
+.letter{
+    width:min(850px,100%);
+    padding:45px;
+    background:
+        linear-gradient(rgba(255,255,255,.92),rgba(255,250,245,.92));
+    border-radius:10px;
+    box-shadow:
+        0 30px 90px rgba(72,47,62,.18);
+    position:relative;
 }
 
-.envelope-stamp {
-  position:absolute;
-  top:20px;
-  right:20px;
-  width:48px;
-  height:58px;
-  border:2px dashed rgba(212,175,55,.5);
-  border-radius:4px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:1.2rem;
-  transform:rotate(5deg);
+.letter:before{
+    content:"";
+    position:absolute;
+    inset:12px;
+    border:1px solid rgba(201,163,95,.35);
+    pointer-events:none;
 }
 
-.letter-salutation {
-  font-family:var(--font-serif);
-  font-size:2.2rem;
-  color:var(--text-dark);
-  margin:16px 0 20px;
+.letter-header{
+    text-align:center;
+    margin-bottom:30px;
 }
 
-.letter-body-text {
-  font-family:var(--font-serif);
-  font-size:1.2rem;
-  line-height:1.85;
-  color:var(--text-dark);
-  text-align:left;
-  margin-bottom:36px;
-  white-space:pre-line;
+.letter-header h2{
+    font-family:"Cormorant Garamond",serif;
+    font-size:3.5rem;
 }
 
-.letter-photos-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:18px;
-  margin:32px 0;
+.photo-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin-bottom:35px;
 }
 
-.letter-photo-card {
-  background:white;
-  padding:12px 12px 18px;
-  border-radius:var(--radius-sm);
-  box-shadow:0 8px 20px rgba(0,0,0,.06);
-  border:1px solid rgba(230,220,225,.8);
+.photo-grid img{
+    width:100%;
+    aspect-ratio:1;
+    object-fit:cover;
+    border-radius:12px;
 }
 
-.letter-photo-card:nth-child(even) {
-  transform:rotate(1.5deg);
+.letter-body{
+    color:var(--soft-ink);
+    line-height:2;
+    font-size:.96rem;
 }
 
-.letter-photo-card:nth-child(odd) {
-  transform:rotate(-1.5deg);
+.letter-signature{
+    margin-top:30px;
+    font-family:"Cormorant Garamond",serif;
+    font-size:1.7rem;
+    color:var(--ink);
 }
 
-.letter-photo-img {
-  width:100%;
-  height:210px;
-  border-radius:8px;
-  object-fit:cover;
-  display:block;
+.proposal-box{
+    margin-top:35px;
+    padding:30px;
+    border-radius:22px;
+    text-align:center;
+    background:linear-gradient(135deg,rgba(233,185,189,.24),rgba(207,197,231,.25));
 }
 
-.letter-photo-caption {
-  margin-top:10px;
-  font-family:var(--font-serif);
-  font-style:italic;
-  font-size:.95rem;
-  color:var(--text-muted);
+.proposal-box h3{
+    font-family:"Cormorant Garamond",serif;
+    font-size:2.4rem;
+    margin-bottom:20px;
 }
 
-.proposal-box {
-  margin:40px 0 32px;
-  padding:32px 20px;
-  background:linear-gradient(
-    135deg,
-    rgba(253,240,242,.85),
-    rgba(245,235,250,.85)
-  );
-  border-radius:var(--radius-md);
-  border:1px solid rgba(232,152,154,.4);
+.proposal-buttons{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:12px;
 }
 
-.proposal-title {
-  font-family:var(--font-serif);
-  font-size:2rem;
-  color:var(--accent-rose-deep);
-  margin-bottom:14px;
+.yes-button,
+.time-button{
+    border:none;
+    padding:14px 23px;
+    border-radius:999px;
+    cursor:pointer;
+    font-weight:700;
+    transition:.3s ease;
 }
 
-.proposal-text {
-  font-family:var(--font-serif);
-  font-size:1.25rem;
-  color:var(--text-dark);
-  margin-bottom:28px;
+.yes-button{
+    background:var(--rose-dark);
+    color:white;
 }
 
-.proposal-actions {
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  align-items:center;
+.time-button{
+    background:white;
+    color:var(--ink);
 }
 
-#celebration-canvas {
-  position:fixed;
-  inset:0;
-  width:100vw;
-  height:100vh;
-  pointer-events:none;
-  z-index:999;
+.yes-button:hover,
+.time-button:hover{
+    transform:translateY(-3px);
 }
 
-footer.experience-footer {
-  margin-top:60px;
-  padding:40px 0;
-  text-align:center;
-  border-top:1px solid rgba(220,200,210,.4);
+.response-message{
+    margin-top:20px;
+    min-height:25px;
+    font-family:"Cormorant Garamond",serif;
+    font-size:1.4rem;
 }
 
-.reset-btn {
-  background:none;
-  border:none;
-  color:var(--text-light);
-  font-size:.75rem;
-  letter-spacing:.1em;
-  text-transform:uppercase;
-  cursor:pointer;
-  margin-top:20px;
-  text-decoration:underline;
+/* CONFETTI */
+
+.confetti{
+    position:fixed;
+    width:8px;
+    height:12px;
+    top:-20px;
+    z-index:300;
+    pointer-events:none;
+    animation:fall 3s linear forwards;
 }
 
-/* MOBILE */
-
-@media(max-width:480px) {
-
-  header.top-bar {
-    padding:14px 16px;
-  }
-
-  .brand-logo {
-    font-size:.9rem;
-  }
-
-  .progress-text {
-    font-size:.65rem;
-  }
-
-  main.content-wrapper {
-    padding-left:14px;
-    padding-right:14px;
-  }
-
-  .glass-card {
-    padding:34px 20px;
-  }
-
-  .section-heading {
-    font-size:2rem;
-  }
-
-  .letter-photos-grid {
-    grid-template-columns:1fr;
-  }
-
-  .bgm-float-btn {
-    right:16px;
-    bottom:16px;
-  }
+@keyframes fall{
+    to{
+        transform:translate3d(var(--x),110vh,0) rotate(720deg);
+        opacity:0;
+    }
 }
 
+/* FOOTER */
+
+.final-actions{
+    margin-top:35px;
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.secondary-button{
+    border:1px solid rgba(58,46,57,.15);
+    background:rgba(255,255,255,.7);
+    padding:13px 22px;
+    border-radius:999px;
+    cursor:pointer;
+    color:var(--ink);
+}
+
+/* RESPONSIVE */
+
+@media(max-width:700px){
+
+    .top-nav{
+        padding:16px 20px;
+    }
+
+    .brand{
+        font-size:.95rem;
+    }
+
+    section{
+        padding:100px 20px 70px;
+    }
+
+    .hero-orbit{
+        width:330px;
+        height:330px;
+    }
+
+    .game-card{
+        padding:25px 18px;
+    }
+
+    .game-card h2{
+        font-size:2.6rem;
+    }
+
+    .star-field{
+        height:320px;
+    }
+
+    .memory-card{
+        grid-template-columns:1fr;
+        padding:15px;
+    }
+
+    .memory-text{
+        padding:10px 5px 20px;
+    }
+
+    .memory-text h2{
+        font-size:2.2rem;
+    }
+
+    .match-board{
+        gap:9px;
+    }
+
+    .letter{
+        padding:30px 20px;
+    }
+
+    .photo-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .letter-header h2{
+        font-size:2.8rem;
+    }
+
+    .door{
+        width:200px;
+        height:310px;
+    }
+
+    .music-toast{
+        right:16px;
+        bottom:84px;
+        max-width:240px;
+    }
+}
+
+@media(max-width:400px){
+    .title{
+        font-size:3.2rem;
+    }
+
+    .star-field{
+        height:290px;
+    }
+}
 </style>
 </head>
 
 <body>
 
-<!--
-====================================================
-  MUSIC
-====================================================
+<canvas id="ambientCanvas"></canvas>
 
-  IMPORTANT:
-  Put your own legally obtained music file here:
-
-  hello_violin.mp3
-
-  It must be in the SAME folder as index.html.
-
-====================================================
+<!-- BACKGROUND MUSIC
+     Put violin_ringtone.mp3 in the SAME folder as this Index.html
 -->
-
 <audio id="bgm-audio" loop preload="auto">
-  <source src="./hello_violin.mp3" type="audio/mpeg">
+    <source src="./violin_ringtone.mp3" type="audio/mpeg">
 </audio>
 
-<!-- MUSIC BUTTON -->
-
-<button
-  class="bgm-float-btn"
-  id="bgm-toggle-btn"
-  title="Toggle Violin Music"
-  aria-label="Toggle background music"
->
-  🎻
-</button>
-
-<!-- BACKGROUND -->
-
-<div class="bg-gradient-blobs">
-  <div class="blob blob-1"></div>
-  <div class="blob blob-2"></div>
-  <div class="blob blob-3"></div>
+<div id="music-toast" class="music-toast">
+    Music could not be loaded.<br>
+    Make sure <b>violin_ringtone.mp3</b> is in the same folder as Index.html.
 </div>
 
-<canvas id="ambient-canvas"></canvas>
-<canvas id="celebration-canvas"></canvas>
+<button
+    id="bgm-toggle-btn"
+    class="bgm-button"
+    aria-label="Toggle background music">
+    🎻
+</button>
 
-<!-- HEADER -->
+<div id="app">
 
-<header class="top-bar">
+<!-- NAV -->
 
-  <div class="brand-logo">
-    OUR_LITTLEWEB
-  </div>
+<nav class="top-nav">
+    <div class="brand">OUR_LITTLEWEB</div>
 
-  <div class="progress-wrapper">
-
-    <span
-      class="progress-text"
-      id="progress-text"
-    >
-      01 / 03
-    </span>
-
-    <div
-      class="progress-dots"
-      id="progress-dots"
-    ></div>
-
-  </div>
-
-</header>
-
-
-<!-- MAIN -->
-
-<main class="content-wrapper">
-
-  <!-- HERO -->
-
-  <section
-    class="story-section"
-    id="hero"
-  >
-
-    <span class="section-label">
-      OUR_LITTLEWEB
-    </span>
-
-    <h1
-      class="section-heading"
-      style="font-size:3.2rem;"
-    >
-      Our Little World
-    </h1>
-
-    <p
-      class="section-subtext"
-      style="
-        font-family:var(--font-serif);
-        font-style:italic;
-        font-size:1.2rem;
-      "
-    >
-      "Some things are better discovered slowly."
-    </p>
-
-    <button
-      class="btn-primary"
-      id="btn-begin"
-    >
-      ✦ BEGIN THE JOURNEY
-    </button>
-
-    <span
-      style="
-        margin-top:24px;
-        font-size:.72rem;
-        letter-spacing:.25em;
-        color:var(--text-light);
-        text-transform:uppercase;
-      "
-    >
-      3 GAMES · UNLOCK MEMORIES · READ THE LETTER
-    </span>
-
-  </section>
-
-
-  <!-- GAME 1 -->
-
-  <section
-    class="story-section is-locked"
-    id="sec-game-1"
-  >
-
-    <div class="glass-card">
-
-      <span class="section-label">
-        Game 01
-      </span>
-
-      <h2 class="section-heading">
-        Gather the Stars
-      </h2>
-
-      <p class="section-subtext">
-        Tap 4 glowing stars floating in the sky
-        to reveal our first memory.
-      </p>
-
-      <div
-        class="star-collector-arena"
-        id="star-arena"
-      ></div>
-
-      <div
-        class="feedback-toast"
-        id="toast-1"
-      >
-        Stars gathered: 0 / 4
-      </div>
-
+    <div class="progress-dots">
+        <span class="progress-dot active" data-step="0"></span>
+        <span class="progress-dot" data-step="1"></span>
+        <span class="progress-dot" data-step="2"></span>
+        <span class="progress-dot" data-step="3"></span>
+        <span class="progress-dot" data-step="4"></span>
+        <span class="progress-dot" data-step="5"></span>
+        <span class="progress-dot" data-step="6"></span>
     </div>
+</nav>
 
-  </section>
 
+<!-- HERO -->
 
-  <!-- MEMORY 1 -->
+<section id="sec-home" class="hero">
 
-  <section
-    class="story-section is-locked"
-    id="sec-mem-1"
-  >
+    <div class="hero-orbit"></div>
 
-    <div class="glass-card">
+    <div class="container hero-content">
 
-      <span class="section-label">
-        A Little Memory
-      </span>
+        <div class="eyebrow">A tiny world made for two</div>
 
-      <h2 class="section-heading">
-        Memory 01
-      </h2>
+        <h1 class="title">
+            Our Little<br>
+            World
+        </h1>
 
-      <div class="photo-card-frame">
-
-        <img
-          src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=800&auto=format&fit=crop"
-          alt="Holding hands"
-          class="photo-card-img"
-        >
-
-        <p class="photo-card-caption">
-          "Where every beautiful story quietly began."
+        <p class="subtitle">
+            A little journey through memories, moments,
+            tiny games and one final surprise.
         </p>
 
-      </div>
-
-      <button
-        class="btn-secondary"
-        onclick="nextStep(3,'sec-game-2')"
-      >
-        NEXT CHALLENGE ↓
-      </button>
+        <button id="btn-begin" class="primary-button">
+            BEGIN THE JOURNEY
+        </button>
 
     </div>
-
-  </section>
-
-
-  <!-- GAME 2 -->
-
-  <section
-    class="story-section is-locked"
-    id="sec-game-2"
-  >
-
-    <div class="glass-card">
-
-      <span class="section-label">
-        Game 02
-      </span>
-
-      <h2 class="section-heading">
-        Remember Together
-      </h2>
-
-      <p class="section-subtext">
-        Match all 3 pairs of matching romantic symbols.
-      </p>
-
-      <div
-        class="memory-grid-compact"
-        id="memory-game-grid"
-      ></div>
-
-      <div
-        class="feedback-toast"
-        id="toast-2"
-      >
-        Find matching pairs
-      </div>
-
-    </div>
-
-  </section>
+</section>
 
 
-  <!-- MEMORY 2 -->
+<!-- MEMORY 1 -->
 
-  <section
-    class="story-section is-locked"
-    id="sec-mem-2"
-  >
+<section class="memory" id="memory-1">
 
-    <div class="glass-card">
-
-      <span class="section-label">
-        Another Piece
-      </span>
-
-      <h2 class="section-heading">
-        Memory 02
-      </h2>
-
-      <div class="photo-card-frame">
+    <div class="memory-card">
 
         <img
-          src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?q=80&w=800&auto=format&fit=crop"
-          alt="Sunset couple"
-          class="photo-card-img"
-        >
+            class="memory-image"
+            src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=1000&q=85"
+            alt="Romantic memory">
 
-        <p class="photo-card-caption">
-          "With you, even simple moments feel like magic."
+        <div class="memory-text">
+            <div class="eyebrow">Chapter One</div>
+
+            <h2>
+                Every story starts somewhere.
+            </h2>
+
+            <p>
+                Before reaching the final surprise,
+                there are a few little moments waiting
+                to be discovered.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- GAME 1 -->
+
+<section id="sec-game-1" class="game-section">
+
+    <div class="game-card">
+
+        <div class="game-number">01 / 03</div>
+
+        <h2>Catch the Stars</h2>
+
+        <p>
+            Four little stars are hiding inside this world.
+            Find and tap every one of them.
         </p>
 
-      </div>
+        <div class="star-field" id="starField">
 
-      <button
-        class="btn-secondary"
-        onclick="nextStep(5,'sec-game-3')"
-      >
-        FINAL GAME ↓
-      </button>
+            <button class="star" data-star="1">✦</button>
+            <button class="star" data-star="2">✦</button>
+            <button class="star" data-star="3">✦</button>
+            <button class="star" data-star="4">✦</button>
 
-    </div>
+        </div>
 
-  </section>
-
-
-  <!-- GAME 3 -->
-
-  <section
-    class="story-section is-locked"
-    id="sec-game-3"
-  >
-
-    <div class="glass-card">
-
-      <span class="section-label">
-        Game 03
-      </span>
-
-      <h2 class="section-heading">
-        The Secret Love Code
-      </h2>
-
-      <p class="section-subtext">
-        Unlock the last door using the code of love.
-      </p>
-
-      <div
-        style="
-          font-size:.85rem;
-          color:var(--accent-rose-deep);
-          margin-bottom:12px;
-          font-weight:600;
-        "
-      >
-        CLUE: "I Love You"
-        (3 Magical Words → Code: 1 4 3)
-      </div>
-
-      <div class="lock-display">
-
-        <div
-          class="lock-digit"
-          id="digit-0"
-        >-</div>
-
-        <div
-          class="lock-digit"
-          id="digit-1"
-        >-</div>
-
-        <div
-          class="lock-digit"
-          id="digit-2"
-        >-</div>
-
-      </div>
-
-      <div class="keypad-grid">
-
-        <button class="keypad-btn" onclick="pressKey(1)">1</button>
-        <button class="keypad-btn" onclick="pressKey(2)">2</button>
-        <button class="keypad-btn" onclick="pressKey(3)">3</button>
-
-        <button class="keypad-btn" onclick="pressKey(4)">4</button>
-        <button class="keypad-btn" onclick="pressKey(5)">5</button>
-        <button class="keypad-btn" onclick="pressKey(6)">6</button>
-
-        <button class="keypad-btn" onclick="pressKey(7)">7</button>
-        <button class="keypad-btn" onclick="pressKey(8)">8</button>
-        <button class="keypad-btn" onclick="pressKey(9)">9</button>
-
-        <button
-          class="keypad-btn"
-          style="color:var(--accent-rose-deep)"
-          onclick="clearLock()"
-        >
-          C
-        </button>
-
-        <button
-          class="keypad-btn"
-          onclick="pressKey(0)"
-        >
-          0
-        </button>
-
-        <button
-          class="keypad-btn"
-          style="color:var(--accent-mint)"
-          onclick="submitLock()"
-        >
-          ✓
-        </button>
-
-      </div>
-
-      <div
-        class="feedback-toast"
-        id="toast-3"
-      >
-        Enter code
-      </div>
+        <div class="game-status" id="starStatus">
+            0 / 4 stars found
+        </div>
 
     </div>
 
-  </section>
+</section>
 
 
-  <!-- DOOR -->
+<!-- MEMORY 2 -->
 
-  <section
-    class="story-section is-locked"
-    id="sec-door"
-  >
+<section class="memory">
 
-    <div class="glass-card">
+    <div class="memory-card">
 
-      <span class="section-label">
-        The Gateway
-      </span>
+        <div class="memory-text">
 
-      <h2 class="section-heading">
-        The Last Door
-      </h2>
+            <div class="eyebrow">A little further</div>
 
-      <p class="section-subtext">
-        "Everything you've discovered leads here."
-      </p>
+            <h2>
+                Some memories deserve another look.
+            </h2>
 
-      <div
-        class="door-wrapper"
-        id="door-wrapper"
-      >
+            <p>
+                Keep going. The next little challenge
+                is waiting for you.
+            </p>
 
-        <div class="door-frame">
+        </div>
 
-          <span style="font-size:2.5rem;">
-            ✨
-          </span>
+        <img
+            class="memory-image"
+            src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=1000&q=85"
+            alt="Memory">
 
-          <div class="door-leaf">
+    </div>
+
+</section>
+
+
+<!-- GAME 2 -->
+
+<section id="sec-game-2" class="game-section">
+
+    <div class="game-card">
+
+        <div class="game-number">02 / 03</div>
+
+        <h2>Memory Match</h2>
+
+        <p>
+            Find all three matching pairs.
+        </p>
+
+        <div class="match-board" id="matchBoard"></div>
+
+        <div class="game-status" id="matchStatus">
+            0 / 3 pairs matched
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- MEMORY 3 -->
+
+<section class="memory">
+
+    <div class="memory-card">
+
+        <img
+            class="memory-image"
+            src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=1000&q=85"
+            alt="Memory">
+
+        <div class="memory-text">
+
+            <div class="eyebrow">One more secret</div>
+
+            <h2>
+                The final lock is waiting.
+            </h2>
+
+            <p>
+                One small riddle stands between you
+                and the final door.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- GAME 3 -->
+
+<section id="sec-game-3" class="game-section">
+
+    <div class="game-card">
+
+        <div class="game-number">03 / 03</div>
+
+        <h2>The Riddle Lock</h2>
+
+        <p>
+            Solve the little clue and enter the
+            secret three-digit code.
+        </p>
+
+        <div class="riddle-box">
+
+            <div class="riddle-question">
+                I am made from three little numbers,
+                and together they mean something special.
+                What am I?
+            </div>
+
+            <input
+                id="codeInput"
+                class="code-input"
+                type="tel"
+                inputmode="numeric"
+                maxlength="3"
+                placeholder="•••"
+            >
+
+            <br>
+
+            <button id="unlockBtn" class="primary-button">
+                UNLOCK
+            </button>
+
+            <div id="riddleStatus" class="game-status"></div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FINAL MEMORY -->
+
+<section class="memory">
+
+    <div class="memory-card">
+
+        <div class="memory-text">
+
+            <div class="eyebrow">Almost there</div>
+
+            <h2>
+                You found every little piece.
+            </h2>
+
+            <p>
+                There is only one thing left to open.
+            </p>
+
+        </div>
+
+        <img
+            class="memory-image"
+            src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=1000&q=85"
+            alt="Final memory">
+
+    </div>
+
+</section>
+
+
+<!-- FINAL DOOR -->
+
+<section id="sec-door" class="door-section">
+
+    <div class="container">
+
+        <div class="eyebrow">The final chapter</div>
+
+        <h2 class="title" style="font-size:clamp(3rem,7vw,5.5rem);">
+            One last door.
+        </h2>
+
+        <p class="subtitle" style="margin-left:auto;margin-right:auto;text-align:center;">
+            You've made it all the way here.
+            Open it when you're ready.
+        </p>
+
+        <div
+            id="finalDoor"
+            class="door"
+            role="button"
+            tabindex="0"
+            aria-label="Open final door">
 
             <div class="door-knob"></div>
 
-          </div>
-
         </div>
 
-      </div>
-
-      <button
-        class="btn-primary"
-        id="btn-open-door"
-        onclick="openFinalDoor()"
-      >
-        OPEN THE LETTER 💌
-      </button>
+        <div id="doorHint" class="game-status">
+            Tap the door to open it
+        </div>
 
     </div>
 
-  </section>
+</section>
 
 
-  <!-- FINAL LETTER -->
+<!-- LETTER -->
 
-  <section id="final-letter-section">
+<section id="sec-letter" class="letter-section">
 
-    <div class="digital-envelope-card">
+    <div class="letter">
 
-      <div class="envelope-stamp">
-        ✦
-      </div>
+        <div class="letter-header">
 
-      <span class="section-label">
-        A SPECIAL DIGITAL LETTER
-      </span>
+            <div class="eyebrow">
+                A little letter
+            </div>
 
-      <h2
-        class="letter-salutation"
-        id="letter-recipient"
-      >
-        Dear Someone Special,
-      </h2>
+            <h2>
+                For You
+            </h2>
 
-      <div
-        class="letter-body-text"
-        id="letter-personal-text"
-      ></div>
+        </div>
 
+        <div class="photo-grid">
 
-      <span
-        class="section-label"
-        style="margin-top:40px;"
-      >
-        OUR MEMORIES
-      </span>
+            <img
+                src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=600&q=85"
+                alt="Memory photo">
 
+            <img
+                src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=600&q=85"
+                alt="Memory photo">
 
-      <div class="letter-photos-grid">
+            <img
+                src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=600&q=85"
+                alt="Memory photo">
 
-        <div class="letter-photo-card">
+            <img
+                src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=600&q=85"
+                alt="Memory photo">
 
-          <img
-            src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=600&auto=format&fit=crop"
-            alt="Embrace"
-            class="letter-photo-img"
-          >
+        </div>
 
-          <p class="letter-photo-caption">
-            "Moments that take my breath away."
-          </p>
+        <div class="letter-body">
+
+            <p>
+                <!-- Replace this paragraph with your own personal message. -->
+                This little world was made from memories,
+                moments and all the small things that make
+                a story special.
+            </p>
+
+            <br>
+
+            <p>
+                <!-- Replace this with your own message. -->
+                Thank you for being part of this journey.
+                There is one question left at the end of it.
+            </p>
+
+            <div class="letter-signature">
+                — Your Name
+            </div>
 
         </div>
 
 
-        <div class="letter-photo-card">
+        <div class="proposal-box">
 
-          <img
-            src="https://images.unsplash.com/photo-1494774157365-9e04c6720e47?q=80&w=600&auto=format&fit=crop"
-            alt="Stargazing"
-            class="letter-photo-img"
-          >
+            <h3>
+                Will you be part of my next chapter?
+            </h3>
 
-          <p class="letter-photo-caption">
-            "Under a million shining stars."
-          </p>
+            <div class="proposal-buttons">
 
-        </div>
+                <button
+                    id="yesBtn"
+                    class="yes-button">
+                    YES ✨
+                </button>
 
+                <button
+                    id="timeBtn"
+                    class="time-button">
+                    I NEED A LITTLE TIME
+                </button>
 
-        <div class="letter-photo-card">
+            </div>
 
-          <img
-            src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=600&auto=format&fit=crop"
-            alt="Coffee"
-            class="letter-photo-img"
-          >
-
-          <p class="letter-photo-caption">
-            "Warm coffee & effortless smiles."
-          </p>
-
-        </div>
-
-
-        <div class="letter-photo-card">
-
-          <img
-            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600&auto=format&fit=crop"
-            alt="Laughter"
-            class="letter-photo-img"
-          >
-
-          <p class="letter-photo-caption">
-            "Your smile is my favorite view."
-          </p>
+            <div
+                id="responseMessage"
+                class="response-message">
+            </div>
 
         </div>
 
-      </div>
 
+        <div class="final-actions">
 
-      <!-- PROPOSAL -->
-
-      <div class="proposal-box">
-
-        <span class="section-label">
-          A QUESTION
-        </span>
-
-        <h3 class="proposal-title">
-          There is something I've wanted to ask...
-        </h3>
-
-        <p
-          class="proposal-text"
-          id="proposal-text-content"
-        ></p>
-
-        <div
-          class="proposal-actions"
-          id="proposal-actions"
-        >
-
-          <button
-            class="btn-primary"
-            style="width:100%;max-width:280px;"
-            onclick="handleProposalResponse(true)"
-          >
-            YES ✦
-          </button>
-
-          <button
-            class="btn-secondary"
-            style="width:100%;max-width:280px;"
-            onclick="handleProposalResponse(false)"
-          >
-            I NEED A LITTLE TIME
-          </button>
+            <button
+                id="restartBtn"
+                class="secondary-button">
+                ↻ Restart Journey
+            </button>
 
         </div>
-
-        <div
-          id="proposal-result"
-          style="display:none;margin-top:20px;"
-        >
-
-          <p
-            id="proposal-result-text"
-            style="
-              font-family:var(--font-serif);
-              font-size:1.4rem;
-              color:var(--accent-rose-deep);
-              font-weight:600;
-            "
-          ></p>
-
-        </div>
-
-      </div>
-
-
-      <!-- END -->
-
-      <div style="margin-top:40px;">
-
-        <p
-          class="section-subtext"
-          id="letter-final-msg"
-        ></p>
-
-        <div
-          class="brand-logo"
-          style="margin-top:20px;"
-        >
-          OUR_LITTLEWEB
-        </div>
-
-        <p
-          style="
-            font-size:.75rem;
-            letter-spacing:.15em;
-            color:var(--text-light);
-            margin-top:6px;
-          "
-        >
-          MADE ONE LITTLE MOMENT AT A TIME.
-        </p>
-
-      </div>
-
-
-      <div
-        style="
-          display:flex;
-          justify-content:center;
-          gap:12px;
-          margin-top:36px;
-          flex-wrap:wrap;
-        "
-      >
-
-        <button
-          class="btn-secondary"
-          onclick="restartJourney()"
-        >
-          ↻ EXPERIENCE AGAIN
-        </button>
-
-      </div>
 
     </div>
 
-  </section>
+</section>
 
-</main>
-
-
-<!-- FOOTER -->
-
-<footer class="experience-footer">
-
-  <div
-    class="brand-logo"
-    style="font-size:1rem;"
-  >
-    OUR_LITTLEWEB
-  </div>
-
-  <p
-    style="
-      font-size:.8rem;
-      color:var(--text-light);
-    "
-  >
-    A romantic interactive journey
-  </p>
-
-  <button
-    class="reset-btn"
-    onclick="resetAllProgress()"
-  >
-    RESET JOURNEY
-  </button>
-
-</footer>
+</div>
 
 
 <script>
 
-/* =====================================================
-   STORY DATA
-===================================================== */
+/* =========================================================
+   BACKGROUND MUSIC
+   ========================================================= */
 
-const story = {
+const audio = document.getElementById("bgm-audio");
+const bgmBtn = document.getElementById("bgm-toggle-btn");
+const musicToast = document.getElementById("music-toast");
 
-  recipientName:"My Love",
-
-  personalMessage:`Looking back at everything we've shared, every small conversation and quiet laugh, I realize how much brighter my world is with you in it.
-
-This little webpage is just a tiny collection of moments, but what it represents is infinite. Every puzzle solved, every door opened—it's all a reflection of how natural and joyful it feels to discover life alongside you.`,
-
-  proposal:
-    "Will you continue this journey with me, hand in hand, into our next chapter?",
-
-  finalMessage:
-    "Thank you for exploring this little world."
-
-};
-
-
-/* =====================================================
-   PROGRESS
-===================================================== */
-
-let currentStep = 0;
-
-const STORAGE_KEY =
-  "our_littleweb_fixed_progress";
-
-
-const sectionOrder = [
-
-  "sec-game-1",
-  "sec-mem-1",
-  "sec-game-2",
-  "sec-mem-2",
-  "sec-game-3",
-  "sec-door"
-
-];
-
-
-/* =====================================================
-   MUSIC PLAYER
-===================================================== */
-
-const audio =
-  document.getElementById("bgm-audio");
-
-const bgmBtn =
-  document.getElementById("bgm-toggle-btn");
-
-let isPlayingAudio = false;
+let musicToastTimer = null;
 
 
 /*
-  Important:
-
-  We DO NOT call audio.load()
-  every time the music starts.
-
-  Calling load() repeatedly can interrupt
-  the audio and cause problems on mobile.
+   This function is intentionally called after a real
+   user interaction such as tapping BEGIN THE JOURNEY.
 */
+async function playAudioStream(){
+
+    try{
+
+        if(audio.readyState === 0){
+            audio.load();
+        }
+
+        await audio.play();
+
+        bgmBtn.classList.add("playing");
+        bgmBtn.textContent = "🎶";
+
+    }catch(error){
+
+        console.warn(
+            "Music could not start:",
+            error
+        );
+
+        bgmBtn.classList.remove("playing");
+        bgmBtn.textContent = "🎻";
+
+        showMusicError();
+    }
+}
 
 
-audio.addEventListener("play",()=>{
+function showMusicError(){
 
-  isPlayingAudio = true;
+    musicToast.classList.add("show");
 
-  bgmBtn.classList.add("playing");
+    clearTimeout(musicToastTimer);
 
-  bgmBtn.innerText = "🎶";
+    musicToastTimer = setTimeout(()=>{
+        musicToast.classList.remove("show");
+    },4000);
+}
 
-});
 
+bgmBtn.addEventListener("click", async ()=>{
 
-audio.addEventListener("pause",()=>{
+    if(!audio.paused){
 
-  isPlayingAudio = false;
+        audio.pause();
 
-  bgmBtn.classList.remove("playing");
+        bgmBtn.classList.remove("playing");
+        bgmBtn.textContent = "🎻";
 
-  bgmBtn.innerText = "🎻";
+    }else{
+
+        await playAudioStream();
+
+    }
 
 });
 
 
 audio.addEventListener("error",()=>{
 
-  console.warn(
-    "Music could not be loaded. Make sure hello_violin.mp3 is beside index.html."
-  );
-
-  isPlayingAudio = false;
-
-  bgmBtn.classList.remove("playing");
-
-  bgmBtn.innerText = "⚠️";
-
-  setTimeout(()=>{
-
-    if(!isPlayingAudio){
-      bgmBtn.innerText = "🎻";
-    }
-
-  },2000);
+    console.warn(
+        "Could not load ./violin_ringtone.mp3"
+    );
 
 });
 
 
-/* PLAY */
+/* =========================================================
+   AMBIENT PARTICLES
+   ========================================================= */
 
-async function playAudioStream(){
+const canvas = document.getElementById("ambientCanvas");
+const ctx = canvas.getContext("2d");
 
-  try{
+let particles = [];
 
-    /*
-      The browser allows playback after
-      the user interacts with the page.
-    */
+function resizeCanvas(){
 
-    if(audio.readyState === 0){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-      audio.load();
+}
+
+resizeCanvas();
+
+window.addEventListener("resize",resizeCanvas);
+
+
+function createParticles(){
+
+    particles = [];
+
+    const count = Math.min(
+        65,
+        Math.floor(window.innerWidth / 12)
+    );
+
+    for(let i=0;i<count;i++){
+
+        particles.push({
+
+            x:Math.random()*canvas.width,
+            y:Math.random()*canvas.height,
+
+            r:Math.random()*2+0.5,
+
+            speed:Math.random()*0.25+0.05,
+
+            alpha:Math.random()*.3+.08,
+
+            drift:(Math.random()-.5)*.2
+
+        });
 
     }
 
-    await audio.play();
+}
 
-    isPlayingAudio = true;
+createParticles();
 
-    bgmBtn.classList.add("playing");
 
-    bgmBtn.innerText = "🎶";
+function animateParticles(){
 
-  }
-
-  catch(error){
-
-    console.warn(
-      "Browser blocked audio:",
-      error
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
     );
 
-    isPlayingAudio = false;
+    particles.forEach(p=>{
 
-    bgmBtn.classList.remove("playing");
+        p.y -= p.speed;
+        p.x += p.drift;
 
-    bgmBtn.innerText = "🎻";
+        if(p.y < -10){
+            p.y = canvas.height+10;
+        }
 
-  }
+        if(p.x < -10){
+            p.x = canvas.width+10;
+        }
+
+        if(p.x > canvas.width+10){
+            p.x = -10;
+        }
+
+        ctx.beginPath();
+
+        ctx.arc(
+            p.x,
+            p.y,
+            p.r,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fillStyle =
+            `rgba(201,163,95,${p.alpha})`;
+
+        ctx.fill();
+
+    });
+
+    requestAnimationFrame(animateParticles);
 
 }
 
+animateParticles();
 
-/* TOGGLE */
 
-function toggleBGM(){
+/* =========================================================
+   PROGRESS
+   ========================================================= */
 
-  if(audio.paused){
+const dots =
+    document.querySelectorAll(".progress-dot");
 
-    playAudioStream();
 
-  }else{
+function updateProgress(step){
 
-    audio.pause();
+    dots.forEach((dot,index)=>{
 
-  }
+        dot.classList.toggle(
+            "active",
+            index <= step
+        );
+
+    });
 
 }
 
-
-bgmBtn.addEventListener(
-  "click",
-  toggleBGM
-);
-
-
-/* =====================================================
-   PROGRESS MANAGEMENT
-===================================================== */
 
 function saveProgress(step){
 
-  if(step > currentStep){
+    try{
+        localStorage.setItem(
+            "ourLittleWorldProgress",
+            String(step)
+        );
+    }catch(e){}
 
-    currentStep = step;
-
-    localStorage.setItem(
-      STORAGE_KEY,
-      currentStep.toString()
-    );
-
-  }
-
-  applyProgressState();
+    updateProgress(step);
 
 }
 
 
 function loadProgress(){
 
-  const saved =
-    localStorage.getItem(STORAGE_KEY);
+    try{
 
-  currentStep =
-    saved !== null
-      ? parseInt(saved,10)
-      : 0;
+        const saved =
+            parseInt(
+                localStorage.getItem(
+                    "ourLittleWorldProgress"
+                ) || "0"
+            );
 
-  applyProgressState();
+        updateProgress(
+            Number.isNaN(saved) ? 0 : saved
+        );
 
-}
+    }catch(e){
 
-
-function applyProgressState(){
-
-  const dotsContainer =
-    document.getElementById("progress-dots");
-
-  dotsContainer.innerHTML = "";
-
-
-  const gameProgressCount =
-    Math.min(
-      Math.floor(currentStep / 2) +
-      (currentStep % 2 === 1 ? 1 : 0),
-      3
-    );
-
-
-  for(let i=1;i<=3;i++){
-
-    const dot =
-      document.createElement("div");
-
-    dot.className = "dot";
-
-    if(i <= gameProgressCount){
-
-      dot.classList.add("completed");
+        updateProgress(0);
 
     }
 
-    dotsContainer.appendChild(dot);
-
-  }
-
-
-  document.getElementById(
-    "progress-text"
-  ).innerText =
-    `0${Math.max(gameProgressCount,1)} / 03`;
-
-
-  sectionOrder.forEach(
-    (secId,idx)=>{
-
-      const sec =
-        document.getElementById(secId);
-
-      if(!sec)return;
-
-
-      if(idx < currentStep){
-
-        sec.classList.remove(
-          "is-locked"
-        );
-
-        sec.classList.add(
-          "is-unlocked"
-        );
-
-      }else{
-
-        sec.classList.remove(
-          "is-unlocked"
-        );
-
-        sec.classList.add(
-          "is-locked"
-        );
-
-      }
-
-    }
-  );
-
-
-  if(currentStep >= 7){
-
-    document
-      .getElementById("final-letter-section")
-      .classList.add("show");
-
-    document
-      .getElementById("door-wrapper")
-      .classList.add("open");
-
-  }
-
 }
 
+loadProgress();
 
-/* SCROLL */
+
+/* =========================================================
+   SECTION SCROLL
+   ========================================================= */
 
 function scrollToSection(id){
 
-  const el =
-    document.getElementById(id);
+    const element =
+        document.getElementById(id);
 
-  if(el){
+    if(!element) return;
 
-    el.scrollIntoView({
-      behavior:"smooth"
+    element.scrollIntoView({
+        behavior:"smooth",
+        block:"start"
     });
 
-  }
-
 }
 
 
-/* NEXT */
-
-function nextStep(step,targetSecId){
-
-  saveProgress(step);
-
-  setTimeout(()=>{
-
-    scrollToSection(targetSecId);
-
-  },100);
-
-}
-
-
-/* =====================================================
+/* =========================================================
    BEGIN JOURNEY
-===================================================== */
+   ========================================================= */
 
 document
-  .getElementById("btn-begin")
-  .addEventListener("click",()=>{
-
-    /*
-      This click is a real user gesture,
-      so mobile browsers are much more
-      likely to allow music playback.
-    */
+.getElementById("btn-begin")
+.addEventListener("click",async ()=>{
 
     saveProgress(1);
 
-    scrollToSection(
-      "sec-game-1"
-    );
+    /*
+       IMPORTANT:
+       The music starts here because this click is a
+       genuine user interaction on mobile.
+    */
+    await playAudioStream();
 
-    if(!isPlayingAudio){
+    scrollToSection("sec-game-1");
 
-      playAudioStream();
-
-    }
-
-  });
+});
 
 
-/* =====================================================
-   GAME 1 — STAR CATCHER
-===================================================== */
+/* =========================================================
+   STAR CATCHER
+   ========================================================= */
+
+const stars =
+    document.querySelectorAll(".star");
+
+const starStatus =
+    document.getElementById("starStatus");
 
 let starsCaught = 0;
 
 
-function setupStarGame(){
+stars.forEach(star=>{
 
-  const arena =
-    document.getElementById(
-      "star-arena"
-    );
+    star.addEventListener("click",()=>{
 
-  arena.innerHTML = "";
+        if(star.classList.contains("caught")){
+            return;
+        }
 
-  starsCaught = 0;
+        star.classList.add("caught");
 
+        starsCaught++;
 
-  const positions = [
+        starStatus.textContent =
+            `${starsCaught} / 4 stars found`;
 
-    {top:"20%",left:"15%"},
-    {top:"60%",left:"70%"},
-    {top:"30%",left:"55%"},
-    {top:"65%",left:"25%"}
+        if(starsCaught === 4){
 
-  ];
+            starStatus.textContent =
+                "All the stars are yours ✨";
 
-
-  positions.forEach(
-    (pos,idx)=>{
-
-      const star =
-        document.createElement("div");
-
-      star.className =
-        "floating-star-target";
-
-      star.style.top =
-        pos.top;
-
-      star.style.left =
-        pos.left;
-
-      star.innerText =
-        "⭐";
-
-      star.style.animationDelay =
-        `${idx * .7}s`;
-
-
-      star.addEventListener(
-        "click",
-        ()=>{
-
-          star.style.opacity = "0";
-
-          star.style.transform =
-            "scale(1.5)";
-
-          star.style.pointerEvents =
-            "none";
-
-
-          starsCaught++;
-
-
-          const toast =
-            document.getElementById(
-              "toast-1"
-            );
-
-          toast.innerText =
-            `Stars gathered: ${starsCaught} / 4`;
-
-          toast.classList.add("show");
-
-
-          if(starsCaught === 4){
-
-            toast.innerText =
-              "✨ All stars collected!";
-
-
-            setTimeout(()=>{
-
-              saveProgress(2);
-
-              scrollToSection(
-                "sec-mem-1"
-              );
-
-            },800);
-
-          }
+            saveProgress(2);
 
         }
-      );
+
+    });
+
+});
 
 
-      arena.appendChild(star);
+/* =========================================================
+   MEMORY MATCH
+   ========================================================= */
 
-    }
-  );
+const matchBoard =
+    document.getElementById("matchBoard");
 
-}
+const matchStatus =
+    document.getElementById("matchStatus");
 
 
-/* =====================================================
-   GAME 2 — MEMORY MATCH
-===================================================== */
-
-const memoryIcons = [
-
-  "🌸",
-  "💖",
-  "✨",
-  "🌸",
-  "💖",
-  "✨"
-
+const symbols = [
+    "♡",
+    "✦",
+    "∞",
+    "♡",
+    "✦",
+    "∞"
 ];
 
 
-let flippedCards = [];
-
+let firstCard = null;
+let secondCard = null;
+let lockBoard = false;
 let matchedPairs = 0;
 
 
-function setupMemoryGame(){
+function shuffle(array){
 
-  const grid =
-    document.getElementById(
-      "memory-game-grid"
-    );
+    const copy = [...array];
 
-  grid.innerHTML = "";
+    for(
+        let i=copy.length-1;
+        i>0;
+        i--
+    ){
 
-  flippedCards = [];
+        const j =
+            Math.floor(Math.random()*(i+1));
 
-  matchedPairs = 0;
+        [copy[i],copy[j]] =
+            [copy[j],copy[i]];
 
+    }
 
-  const shuffled =
-    [...memoryIcons].sort(
-      ()=>Math.random()-.5
-    );
-
-
-  shuffled.forEach(icon=>{
-
-    const card =
-      document.createElement("div");
-
-    card.className =
-      "memory-card";
-
-    card.dataset.icon =
-      icon;
-
-
-    card.innerHTML = `
-
-      <div class="card-face card-back">
-        ✦
-      </div>
-
-      <div class="card-face card-front">
-        ${icon}
-      </div>
-
-    `;
-
-
-    card.addEventListener(
-      "click",
-      ()=>{
-
-        if(
-
-          flippedCards.length >= 2 ||
-          card.classList.contains("flipped") ||
-          card.classList.contains("matched")
-
-        ){
-
-          return;
-
-        }
-
-
-        card.classList.add(
-          "flipped"
-        );
-
-        flippedCards.push(card);
-
-
-        if(flippedCards.length === 2){
-
-          const [c1,c2] =
-            flippedCards;
-
-
-          if(
-            c1.dataset.icon ===
-            c2.dataset.icon
-          ){
-
-            c1.classList.add(
-              "matched"
-            );
-
-            c2.classList.add(
-              "matched"
-            );
-
-            matchedPairs++;
-
-            flippedCards = [];
-
-
-            if(matchedPairs === 3){
-
-              const toast =
-                document.getElementById(
-                  "toast-2"
-                );
-
-              toast.innerText =
-                "✨ Perfectly matched!";
-
-              toast.classList.add(
-                "show"
-              );
-
-
-              setTimeout(()=>{
-
-                saveProgress(4);
-
-                scrollToSection(
-                  "sec-mem-2"
-                );
-
-              },800);
-
-            }
-
-
-          }else{
-
-            setTimeout(()=>{
-
-              c1.classList.remove(
-                "flipped"
-              );
-
-              c2.classList.remove(
-                "flipped"
-              );
-
-              flippedCards = [];
-
-            },850);
-
-          }
-
-        }
-
-      }
-    );
-
-
-    grid.appendChild(card);
-
-  });
+    return copy;
 
 }
 
 
-/* =====================================================
-   GAME 3 — SECRET CODE
-===================================================== */
+function createMatchBoard(){
 
-const CORRECT_CODE =
-  "143";
+    matchBoard.innerHTML = "";
 
-let enteredCode = "";
+    shuffle(symbols).forEach((symbol,index)=>{
+
+        const card =
+            document.createElement("button");
+
+        card.className =
+            "memory-card-game";
+
+        card.dataset.symbol = symbol;
+
+        card.innerHTML = `
+            <div class="memory-inner">
+                <div class="memory-front">?</div>
+                <div class="memory-back">${symbol}</div>
+            </div>
+        `;
+
+        card.addEventListener(
+            "click",
+            ()=>flipCard(card)
+        );
+
+        matchBoard.appendChild(card);
+
+    });
+
+}
+
+createMatchBoard();
 
 
-function updateLockDisplay(){
+function flipCard(card){
 
-  for(let i=0;i<3;i++){
+    if(lockBoard) return;
 
-    const digitEl =
-      document.getElementById(
-        `digit-${i}`
-      );
+    if(card === firstCard) return;
+
+    if(card.classList.contains("matched")) return;
+
+    card.classList.add("flipped");
+
+    if(!firstCard){
+
+        firstCard = card;
+        return;
+
+    }
+
+    secondCard = card;
+
+    checkMatch();
+
+}
 
 
-    if(enteredCode[i]){
+function checkMatch(){
 
-      digitEl.innerText =
-        enteredCode[i];
+    const match =
+        firstCard.dataset.symbol ===
+        secondCard.dataset.symbol;
 
-      digitEl.classList.add(
-        "active"
-      );
+    if(match){
+
+        firstCard.classList.add("matched");
+        secondCard.classList.add("matched");
+
+        matchedPairs++;
+
+        matchStatus.textContent =
+            `${matchedPairs} / 3 pairs matched`;
+
+        resetMatchCards();
+
+        if(matchedPairs === 3){
+
+            matchStatus.textContent =
+                "Memory unlocked ✨";
+
+            saveProgress(3);
+
+        }
 
     }else{
 
-      digitEl.innerText =
-        "-";
+        lockBoard = true;
 
-      digitEl.classList.remove(
-        "active"
-      );
+        setTimeout(()=>{
 
-    }
+            firstCard.classList.remove("flipped");
+            secondCard.classList.remove("flipped");
 
-  }
+            resetMatchCards();
 
-}
-
-
-function pressKey(num){
-
-  if(enteredCode.length < 3){
-
-    enteredCode +=
-      num.toString();
-
-    updateLockDisplay();
-
-  }
-
-}
-
-
-function clearLock(){
-
-  enteredCode = "";
-
-  updateLockDisplay();
-
-}
-
-
-function submitLock(){
-
-  const toast =
-    document.getElementById(
-      "toast-3"
-    );
-
-
-  if(enteredCode === CORRECT_CODE){
-
-    toast.innerText =
-      "🔓 Unlocked!";
-
-    toast.classList.add(
-      "show"
-    );
-
-
-    /*
-      Start/keep music playing
-      after another user interaction.
-    */
-
-    if(!isPlayingAudio){
-
-      playAudioStream();
+        },750);
 
     }
 
-
-    setTimeout(()=>{
-
-      saveProgress(6);
-
-      scrollToSection(
-        "sec-door"
-      );
-
-    },800);
+}
 
 
-  }else{
+function resetMatchCards(){
 
-    toast.innerText =
-      "Try again! Hint: 1 4 3";
-
-    toast.classList.add(
-      "show"
-    );
-
-
-    clearLock();
-
-
-    setTimeout(()=>{
-
-      toast.classList.remove(
-        "show"
-      );
-
-    },2000);
-
-  }
+    firstCard = null;
+    secondCard = null;
+    lockBoard = false;
 
 }
 
 
-/* =====================================================
+/* =========================================================
+   RIDDLE LOCK
+   ========================================================= */
+
+const codeInput =
+    document.getElementById("codeInput");
+
+const unlockBtn =
+    document.getElementById("unlockBtn");
+
+const riddleStatus =
+    document.getElementById("riddleStatus");
+
+
+unlockBtn.addEventListener("click",()=>{
+
+    const code =
+        codeInput.value.trim();
+
+    if(code === "143"){
+
+        riddleStatus.textContent =
+            "Correct. The final path is open ✨";
+
+        riddleStatus.style.color =
+            "#8a5965";
+
+        saveProgress(4);
+
+        setTimeout(()=>{
+
+            scrollToSection("sec-door");
+
+        },700);
+
+    }else{
+
+        riddleStatus.textContent =
+            "Not quite. Try again.";
+
+        riddleStatus.style.color =
+            "#9b6262";
+
+    }
+
+});
+
+
+codeInput.addEventListener("keydown",(event)=>{
+
+    if(event.key === "Enter"){
+
+        unlockBtn.click();
+
+    }
+
+});
+
+
+/* =========================================================
    FINAL DOOR
-===================================================== */
+   ========================================================= */
+
+const finalDoor =
+    document.getElementById("finalDoor");
+
+const doorHint =
+    document.getElementById("doorHint");
+
+const letterSection =
+    document.getElementById("sec-letter");
+
 
 function openFinalDoor(){
 
-  const door =
-    document.getElementById(
-      "door-wrapper"
-    );
+    if(finalDoor.classList.contains("open")){
+        return;
+    }
 
-  door.classList.add("open");
+    finalDoor.classList.add("open");
 
+    doorHint.textContent =
+        "The final chapter is here ✨";
 
-  /*
-    Make sure music continues.
-  */
+    saveProgress(6);
 
-  if(!isPlayingAudio){
+    if(audio.paused){
+        playAudioStream();
+    }
 
-    playAudioStream();
+    setTimeout(()=>{
 
-  }
+        letterSection.classList.add("visible");
 
+        saveProgress(7);
 
-  setTimeout(()=>{
+        setTimeout(()=>{
 
-    saveProgress(7);
+            scrollToSection("sec-letter");
 
+        },300);
 
-    const letterSection =
-      document.getElementById(
-        "final-letter-section"
-      );
-
-
-    letterSection.classList.add(
-      "show"
-    );
-
-
-    letterSection.scrollIntoView({
-      behavior:"smooth"
-    });
-
-
-    triggerConfetti();
-
-  },1000);
+    },900);
 
 }
 
 
-/* =====================================================
-   PROPOSAL
-===================================================== */
-
-function handleProposalResponse(isYes){
-
-  const actions =
-    document.getElementById(
-      "proposal-actions"
-    );
-
-  const resultBox =
-    document.getElementById(
-      "proposal-result"
-    );
-
-  const resultText =
-    document.getElementById(
-      "proposal-result-text"
-    );
+finalDoor.addEventListener(
+    "click",
+    openFinalDoor
+);
 
 
-  actions.style.display =
-    "none";
+finalDoor.addEventListener(
+    "keydown",
+    event=>{
 
-  resultBox.style.display =
-    "block";
+        if(
+            event.key === "Enter" ||
+            event.key === " "
+        ){
+
+            event.preventDefault();
+
+            openFinalDoor();
+
+        }
+
+    }
+);
 
 
-  if(isYes){
+/* =========================================================
+   PROPOSAL RESPONSE
+   ========================================================= */
 
-    resultText.innerText =
-      "🌸 A new chapter begins. ❤️";
+const yesBtn =
+    document.getElementById("yesBtn");
 
-    triggerConfetti();
+const timeBtn =
+    document.getElementById("timeBtn");
 
-  }else{
+const responseMessage =
+    document.getElementById("responseMessage");
 
-    resultText.innerText =
-      "Take all the time you need. ❤️";
 
-  }
+yesBtn.addEventListener("click",()=>{
+
+    responseMessage.textContent =
+        "✨ Thank you for making it to the end. ✨";
+
+    createConfetti();
+
+});
+
+
+timeBtn.addEventListener("click",()=>{
+
+    responseMessage.textContent =
+        "Take all the time you need. 🌷";
+
+});
+
+
+/* =========================================================
+   CONFETTI
+   ========================================================= */
+
+function createConfetti(){
+
+    const pieces = 90;
+
+    for(let i=0;i<pieces;i++){
+
+        const piece =
+            document.createElement("div");
+
+        piece.className = "confetti";
+
+        const x =
+            (Math.random()-.5)*window.innerWidth*1.4;
+
+        piece.style.left =
+            Math.random()*100+"vw";
+
+        piece.style.setProperty(
+            "--x",
+            `${x}px`
+        );
+
+        piece.style.animationDuration =
+            `${2+Math.random()*2}s`;
+
+        piece.style.animationDelay =
+            `${Math.random()*.7}s`;
+
+        piece.style.background =
+            [
+                "#e9b9bd",
+                "#cfc5e7",
+                "#c9a35f",
+                "#ffffff",
+                "#c98591"
+            ][Math.floor(Math.random()*5)];
+
+        document.body.appendChild(piece);
+
+        setTimeout(()=>{
+            piece.remove();
+        },4500);
+
+    }
 
 }
 
 
-/* =====================================================
-   RESET
-===================================================== */
+/* =========================================================
+   RESTART
+   ========================================================= */
 
-function resetAllProgress(){
+document
+.getElementById("restartBtn")
+.addEventListener("click",()=>{
 
-  if(confirm(
-    "Reset journey progress?"
-  )){
-
-    localStorage.removeItem(
-      STORAGE_KEY
-    );
+    try{
+        localStorage.removeItem(
+            "ourLittleWorldProgress"
+        );
+    }catch(e){}
 
     location.reload();
 
-  }
+});
 
-}
 
+/* =========================================================
+   IMAGE FALLBACK
+   ========================================================= */
 
-function restartJourney(){
+document.querySelectorAll("img").forEach(img=>{
 
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
+    img.addEventListener("error",()=>{
 
-}
+        img.style.background =
+            "linear-gradient(135deg,#ead3d5,#ddd4e9)";
 
-
-/* =====================================================
-   AMBIENT PARTICLES
-===================================================== */
-
-const canvas =
-  document.getElementById(
-    "ambient-canvas"
-  );
-
-const ctx =
-  canvas.getContext("2d");
-
-let particles = [];
-
-
-function resizeCanvas(){
-
-  canvas.width =
-    window.innerWidth;
-
-  canvas.height =
-    window.innerHeight;
-
-}
-
-
-window.addEventListener(
-  "resize",
-  resizeCanvas
-);
-
-resizeCanvas();
-
-
-class Particle{
-
-  constructor(){
-
-    this.reset();
-
-  }
-
-
-  reset(){
-
-    this.x =
-      Math.random() *
-      canvas.width;
-
-    this.y =
-      Math.random() *
-      canvas.height;
-
-    this.size =
-      Math.random()*3+2;
-
-    this.speedY =
-      Math.random()*.5+.2;
-
-    this.opacity =
-      Math.random()*.5+.2;
-
-    this.color =
-      [
-        "#e8989a",
-        "#d4af37",
-        "#b59bd3"
-      ][
-        Math.floor(
-          Math.random()*3
-        )
-      ];
-
-  }
-
-
-  update(){
-
-    this.y +=
-      this.speedY;
-
-
-    if(
-      this.y >
-      canvas.height
-    ){
-
-      this.reset();
-
-    }
-
-  }
-
-
-  draw(){
-
-    ctx.beginPath();
-
-    ctx.arc(
-      this.x,
-      this.y,
-      this.size,
-      0,
-      Math.PI*2
-    );
-
-    ctx.fillStyle =
-      this.color;
-
-    ctx.globalAlpha =
-      this.opacity;
-
-    ctx.fill();
-
-    ctx.globalAlpha = 1;
-
-  }
-
-}
-
-
-for(
-  let i=0;
-  i<20;
-  i++
-){
-
-  particles.push(
-    new Particle()
-  );
-
-}
-
-
-function animateAmbient(){
-
-  ctx.clearRect(
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
-
-
-  particles.forEach(p=>{
-
-    p.update();
-
-    p.draw();
-
-  });
-
-
-  requestAnimationFrame(
-    animateAmbient
-  );
-
-}
-
-
-animateAmbient();
-
-
-/* =====================================================
-   CONFETTI
-===================================================== */
-
-const cCanvas =
-  document.getElementById(
-    "celebration-canvas"
-  );
-
-const cCtx =
-  cCanvas.getContext("2d");
-
-let confettiList = [];
-
-
-function resizeCelebrationCanvas(){
-
-  cCanvas.width =
-    window.innerWidth;
-
-  cCanvas.height =
-    window.innerHeight;
-
-}
-
-
-window.addEventListener(
-  "resize",
-  resizeCelebrationCanvas
-);
-
-resizeCelebrationCanvas();
-
-
-function triggerConfetti(){
-
-  confettiList = [];
-
-
-  for(let i=0;i<70;i++){
-
-    confettiList.push({
-
-      x:cCanvas.width/2,
-
-      y:cCanvas.height/2,
-
-      vx:
-        (Math.random()-.5)*12,
-
-      vy:
-        (Math.random()-.7)*14,
-
-      size:
-        Math.random()*8+4,
-
-      color:
-        [
-          "#e8989a",
-          "#d4af37",
-          "#b59bd3",
-          "#88c0a8"
-        ][
-          Math.floor(
-            Math.random()*4
-          )
-        ],
-
-      life:100
+        img.removeAttribute("src");
 
     });
 
-  }
+});
 
-
-  animateConfetti();
-
-}
-
-
-function animateConfetti(){
-
-  cCtx.clearRect(
-    0,
-    0,
-    cCanvas.width,
-    cCanvas.height
-  );
-
-
-  let active = false;
-
-
-  confettiList.forEach(p=>{
-
-    if(p.life > 0){
-
-      active = true;
-
-
-      p.x += p.vx;
-
-      p.y += p.vy;
-
-      p.vy += .2;
-
-      p.life--;
-
-
-      cCtx.beginPath();
-
-      cCtx.arc(
-        p.x,
-        p.y,
-        p.size,
-        0,
-        Math.PI*2
-      );
-
-      cCtx.fillStyle =
-        p.color;
-
-      cCtx.globalAlpha =
-        p.life/100;
-
-      cCtx.fill();
-
-      cCtx.globalAlpha = 1;
-
-    }
-
-  });
-
-
-  if(active){
-
-    requestAnimationFrame(
-      animateConfetti
-    );
-
-  }
-
-}
-
-
-/* =====================================================
-   INITIALIZE
-===================================================== */
-
-window.addEventListener(
-  "DOMContentLoaded",
-  ()=>{
-
-    document.getElementById(
-      "letter-recipient"
-    ).innerText =
-      `Dear ${story.recipientName},`;
-
-
-    document.getElementById(
-      "letter-personal-text"
-    ).innerText =
-      story.personalMessage;
-
-
-    document.getElementById(
-      "proposal-text-content"
-    ).innerText =
-      story.proposal;
-
-
-    document.getElementById(
-      "letter-final-msg"
-    ).innerText =
-      story.finalMessage;
-
-
-    setupStarGame();
-
-    setupMemoryGame();
-
-    loadProgress();
-
-  }
-);
 
 </script>
 
