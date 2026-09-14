@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f7efe8">
 <title>Our Little World — Our_LittleWeb</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,17 +12,15 @@
 
 <style>
 :root{
-    --ink:#3a2e39;
-    --soft-ink:#695866;
-    --paper:#f8f2ec;
-    --rose:#e9b9bd;
-    --rose-dark:#c98591;
-    --lavender:#cfc5e7;
-    --gold:#c9a35f;
-    --cream:#fffaf5;
-    --white:rgba(255,255,255,.72);
-    --shadow:0 25px 70px rgba(72,47,62,.13);
-    --radius:28px;
+    --cream:#f8f1ea;
+    --rose:#d9a7a0;
+    --pink:#e9c5c4;
+    --lavender:#cfc9e7;
+    --gold:#c5a46d;
+    --deep:#3c3040;
+    --muted:#756b73;
+    --white:#fffdfb;
+    --shadow:0 25px 70px rgba(75,45,60,.15);
 }
 
 *{
@@ -38,14 +36,24 @@ html{
 body{
     font-family:"Plus Jakarta Sans",sans-serif;
     background:
-        radial-gradient(circle at 15% 10%,rgba(233,185,189,.28),transparent 28%),
-        radial-gradient(circle at 85% 20%,rgba(207,197,231,.35),transparent 30%),
-        linear-gradient(135deg,#fbf5ef,#f5edf1 50%,#f8f2ec);
-    color:var(--ink);
+        radial-gradient(circle at 20% 10%,rgba(233,197,196,.45),transparent 30%),
+        radial-gradient(circle at 85% 30%,rgba(207,201,231,.5),transparent 35%),
+        var(--cream);
+    color:var(--deep);
     overflow-x:hidden;
 }
 
-canvas#ambientCanvas{
+button,
+input{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+    border:0;
+}
+
+#ambientCanvas{
     position:fixed;
     inset:0;
     width:100%;
@@ -54,354 +62,265 @@ canvas#ambientCanvas{
     z-index:0;
 }
 
-a{
-    color:inherit;
-    text-decoration:none;
-}
-
-button{
-    font-family:inherit;
-}
-
-#app{
-    position:relative;
-    z-index:1;
-}
-
-/* NAVIGATION */
-
-.top-nav{
+nav{
     position:fixed;
     top:0;
     left:0;
-    right:0;
-    z-index:100;
+    width:100%;
+    height:72px;
+    padding:0 7%;
     display:flex;
+    align-items:center;
     justify-content:space-between;
-    align-items:center;
-    padding:20px 5vw;
-    background:rgba(248,242,236,.62);
+    z-index:100;
+    background:rgba(248,241,234,.72);
     backdrop-filter:blur(18px);
-    -webkit-backdrop-filter:blur(18px);
-    border-bottom:1px solid rgba(255,255,255,.5);
+    border-bottom:1px solid rgba(197,164,109,.15);
 }
 
-.brand{
+.logo{
     font-family:"Cormorant Garamond",serif;
-    font-size:1.15rem;
+    font-size:25px;
     font-weight:700;
-    letter-spacing:.18em;
+    letter-spacing:3px;
 }
 
-.progress-dots{
+.progress{
     display:flex;
-    gap:8px;
-    align-items:center;
+    gap:9px;
 }
 
-.progress-dot{
-    width:7px;
-    height:7px;
+.dot{
+    width:8px;
+    height:8px;
     border-radius:50%;
-    background:rgba(58,46,57,.18);
-    transition:.4s ease;
+    background:rgba(60,48,64,.2);
+    transition:.3s;
 }
 
-.progress-dot.active{
-    width:24px;
-    border-radius:20px;
-    background:var(--rose-dark);
+.dot.active{
+    background:var(--gold);
+    transform:scale(1.4);
 }
 
-/* MUSIC */
-
-.bgm-button{
+#bgm-btn{
     position:fixed;
-    right:22px;
-    bottom:22px;
-    z-index:150;
+    right:20px;
+    bottom:20px;
     width:52px;
     height:52px;
-    border:none;
     border-radius:50%;
-    background:rgba(255,255,255,.78);
-    box-shadow:0 12px 35px rgba(70,45,60,.18);
-    backdrop-filter:blur(15px);
-    cursor:pointer;
-    font-size:1.15rem;
-    transition:.3s ease;
+    background:rgba(255,253,251,.9);
+    color:var(--deep);
+    box-shadow:0 10px 30px rgba(75,45,60,.16);
+    z-index:150;
+    font-size:20px;
+    border:1px solid rgba(197,164,109,.3);
+    transition:.3s;
 }
 
-.bgm-button:hover{
+#bgm-btn:hover{
     transform:translateY(-3px) scale(1.04);
 }
 
-.bgm-button.playing{
-    box-shadow:
-        0 0 0 7px rgba(201,163,95,.12),
-        0 12px 35px rgba(70,45,60,.18);
-}
-
-.music-toast{
-    position:fixed;
-    right:22px;
-    bottom:88px;
-    z-index:151;
-    max-width:280px;
-    padding:12px 16px;
-    border-radius:15px;
-    background:rgba(58,46,57,.94);
+#bgm-btn.playing{
+    background:var(--deep);
     color:white;
-    font-size:.75rem;
-    line-height:1.5;
-    opacity:0;
-    transform:translateY(12px);
-    pointer-events:none;
-    transition:.3s ease;
 }
-
-.music-toast.show{
-    opacity:1;
-    transform:translateY(0);
-}
-
-/* GENERAL */
 
 section{
+    position:relative;
     min-height:100vh;
-    padding:120px 7vw 90px;
+    padding:120px 7%;
     display:flex;
     align-items:center;
     justify-content:center;
-    position:relative;
+    z-index:1;
 }
-
-.container{
-    width:min(1050px,100%);
-    margin:auto;
-}
-
-.eyebrow{
-    text-transform:uppercase;
-    letter-spacing:.28em;
-    font-size:.68rem;
-    font-weight:700;
-    color:var(--rose-dark);
-    margin-bottom:15px;
-}
-
-.title{
-    font-family:"Cormorant Garamond",serif;
-    font-size:clamp(3.2rem,8vw,7rem);
-    line-height:.9;
-    font-weight:600;
-}
-
-.subtitle{
-    margin-top:25px;
-    max-width:620px;
-    color:var(--soft-ink);
-    line-height:1.8;
-    font-size:.98rem;
-}
-
-/* HERO */
 
 .hero{
-    min-height:100vh;
     text-align:center;
     overflow:hidden;
 }
 
 .hero-content{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-}
-
-.hero-orbit{
-    position:absolute;
-    width:500px;
-    height:500px;
-    border:1px solid rgba(201,163,95,.18);
-    border-radius:50%;
-    animation:spin 25s linear infinite;
-}
-
-.hero-orbit:before,
-.hero-orbit:after{
-    content:"";
-    position:absolute;
-    border-radius:50%;
-}
-
-.hero-orbit:before{
-    width:10px;
-    height:10px;
-    background:var(--gold);
-    top:30px;
-    left:90px;
-    box-shadow:0 0 25px rgba(201,163,95,.6);
-}
-
-.hero-orbit:after{
-    width:7px;
-    height:7px;
-    background:var(--rose-dark);
-    right:40px;
-    bottom:90px;
-}
-
-@keyframes spin{
-    to{transform:rotate(360deg)}
-}
-
-.hero .eyebrow{
     position:relative;
-    z-index:2;
+    z-index:10;
+    max-width:850px;
 }
 
-.hero .title{
-    position:relative;
-    z-index:2;
+.eyebrow{
+    font-size:12px;
+    letter-spacing:5px;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:20px;
 }
 
-.hero .subtitle{
-    position:relative;
-    z-index:2;
-    text-align:center;
+h1{
+    font-family:"Cormorant Garamond",serif;
+    font-size:clamp(64px,12vw,145px);
+    line-height:.82;
+    font-weight:500;
+    letter-spacing:-4px;
+    margin-bottom:35px;
+}
+
+.hero-sub{
+    max-width:600px;
+    margin:0 auto 40px;
+    color:var(--muted);
+    line-height:1.8;
+    font-size:16px;
 }
 
 .primary-button{
-    margin-top:35px;
-    border:none;
-    padding:17px 30px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    padding:16px 30px;
     border-radius:999px;
-    background:var(--ink);
-    color:#fff;
-    font-size:.76rem;
-    font-weight:700;
-    letter-spacing:.16em;
-    cursor:pointer;
-    box-shadow:0 15px 35px rgba(58,46,57,.2);
-    transition:.3s ease;
+    background:var(--deep);
+    color:white;
+    box-shadow:0 15px 35px rgba(60,48,64,.22);
+    transition:.3s;
+    position:relative;
+    z-index:30;
 }
 
 .primary-button:hover{
     transform:translateY(-3px);
-    box-shadow:0 20px 45px rgba(58,46,57,.25);
+    box-shadow:0 20px 40px rgba(60,48,64,.3);
 }
 
-/* MEMORY */
+.hero-orbit{
+    position:absolute;
+    width:520px;
+    height:520px;
+    border:1px solid rgba(197,164,109,.2);
+    border-radius:50%;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    pointer-events:none;
+}
+
+.hero-orbit::before,
+.hero-orbit::after{
+    content:"";
+    position:absolute;
+    border-radius:50%;
+    border:1px solid rgba(217,167,160,.2);
+}
+
+.hero-orbit::before{
+    inset:50px;
+}
+
+.hero-orbit::after{
+    inset:110px;
+}
 
 .memory{
-    min-height:auto;
-    padding-top:60px;
-    padding-bottom:60px;
+    background:rgba(255,253,251,.32);
 }
 
 .memory-card{
-    width:min(850px,100%);
+    width:min(1050px,100%);
     display:grid;
     grid-template-columns:1fr 1fr;
-    gap:30px;
+    gap:50px;
     align-items:center;
-    padding:25px;
-    border-radius:var(--radius);
-    background:var(--white);
-    backdrop-filter:blur(20px);
-    box-shadow:var(--shadow);
-    border:1px solid rgba(255,255,255,.7);
 }
 
 .memory-image{
     width:100%;
-    aspect-ratio:4/3;
+    height:500px;
+    border-radius:30px;
     object-fit:cover;
-    border-radius:22px;
+    box-shadow:var(--shadow);
 }
 
 .memory-text{
-    padding:10px;
+    padding:20px;
+}
+
+.memory-number{
+    color:var(--gold);
+    letter-spacing:4px;
+    font-size:12px;
+    margin-bottom:18px;
 }
 
 .memory-text h2{
     font-family:"Cormorant Garamond",serif;
-    font-size:2.6rem;
-    margin-bottom:12px;
+    font-size:60px;
+    font-weight:500;
+    margin-bottom:20px;
 }
 
 .memory-text p{
-    color:var(--soft-ink);
-    line-height:1.8;
+    color:var(--muted);
+    line-height:1.9;
 }
-
-/* GAME */
 
 .game-section{
-    min-height:100vh;
-}
-
-.game-card{
-    width:min(850px,100%);
-    background:rgba(255,255,255,.64);
-    backdrop-filter:blur(22px);
-    border:1px solid rgba(255,255,255,.72);
-    border-radius:32px;
-    padding:40px;
-    box-shadow:var(--shadow);
+    flex-direction:column;
     text-align:center;
 }
 
-.game-number{
-    font-family:"Cormorant Garamond",serif;
+.game-container{
+    width:min(900px,100%);
+    padding:45px;
+    border-radius:35px;
+    background:rgba(255,253,251,.65);
+    border:1px solid rgba(255,255,255,.8);
+    box-shadow:var(--shadow);
+    backdrop-filter:blur(20px);
+}
+
+.game-label{
+    font-size:11px;
+    letter-spacing:4px;
     color:var(--gold);
-    font-size:1.1rem;
+    text-transform:uppercase;
+    margin-bottom:15px;
 }
 
-.game-card h2{
+.game-title{
     font-family:"Cormorant Garamond",serif;
-    font-size:3.2rem;
-    margin:8px 0 10px;
+    font-size:55px;
+    font-weight:500;
+    margin-bottom:12px;
 }
 
-.game-card > p{
-    color:var(--soft-ink);
-    line-height:1.7;
+.game-description{
+    color:var(--muted);
+    margin-bottom:35px;
 }
 
-/* STAR GAME */
-
-.star-field{
+.star-board{
+    height:380px;
     position:relative;
-    height:360px;
-    margin-top:30px;
-    border-radius:24px;
-    overflow:hidden;
+    border-radius:25px;
     background:
-        radial-gradient(circle at 30% 30%,rgba(233,185,189,.28),transparent 25%),
-        radial-gradient(circle at 75% 65%,rgba(207,197,231,.35),transparent 25%),
-        rgba(255,250,245,.55);
-    border:1px solid rgba(255,255,255,.75);
+        radial-gradient(circle at 30% 30%,rgba(233,197,196,.35),transparent 25%),
+        radial-gradient(circle at 70% 70%,rgba(207,201,231,.45),transparent 30%),
+        rgba(255,255,255,.45);
+    overflow:hidden;
 }
 
 .star{
     position:absolute;
-    width:48px;
-    height:48px;
-    border:none;
-    border-radius:50%;
-    background:rgba(255,255,255,.8);
-    box-shadow:0 8px 30px rgba(201,163,95,.25);
-    cursor:pointer;
-    font-size:1.25rem;
-    transition:.3s ease;
+    font-size:34px;
+    background:transparent;
     animation:floatStar 3s ease-in-out infinite;
+    transition:.3s;
 }
 
 .star:hover{
-    transform:scale(1.2);
+    transform:scale(1.3);
 }
 
 .star.caught{
@@ -410,396 +329,306 @@ section{
     pointer-events:none;
 }
 
-.star:nth-child(1){left:12%;top:20%;animation-delay:.2s}
-.star:nth-child(2){left:68%;top:18%;animation-delay:.8s}
-.star:nth-child(3){left:35%;top:55%;animation-delay:1.2s}
-.star:nth-child(4){left:78%;top:67%;animation-delay:.4s}
-
 @keyframes floatStar{
-    0%,100%{transform:translateY(0)}
-    50%{transform:translateY(-13px)}
+    0%,100%{transform:translateY(0) rotate(0deg)}
+    50%{transform:translateY(-18px) rotate(12deg)}
 }
 
-.game-status{
-    margin-top:20px;
-    font-size:.78rem;
-    color:var(--soft-ink);
+.counter{
+    margin-top:22px;
+    font-weight:600;
 }
-
-/* MEMORY MATCH */
 
 .match-board{
     display:grid;
     grid-template-columns:repeat(3,1fr);
-    gap:14px;
-    max-width:470px;
-    margin:30px auto 0;
+    gap:15px;
+    max-width:520px;
+    margin:0 auto;
 }
 
 .memory-card-game{
     aspect-ratio:1;
-    border:none;
     border-radius:18px;
-    cursor:pointer;
-    background:transparent;
-    perspective:800px;
-}
-
-.memory-inner{
-    width:100%;
-    height:100%;
-    position:relative;
-    transform-style:preserve-3d;
-    transition:transform .55s ease;
-}
-
-.memory-card-game.flipped .memory-inner,
-.memory-card-game.matched .memory-inner{
-    transform:rotateY(180deg);
-}
-
-.memory-front,
-.memory-back{
-    position:absolute;
-    inset:0;
-    border-radius:18px;
-    backface-visibility:hidden;
+    background:linear-gradient(145deg,#fff,#f1e6e4);
     display:flex;
-    justify-content:center;
     align-items:center;
+    justify-content:center;
+    font-size:35px;
+    box-shadow:0 8px 20px rgba(60,48,64,.08);
+    transition:.3s;
 }
 
-.memory-front{
-    background:linear-gradient(135deg,#f4d9db,#ddd3ed);
-    font-family:"Cormorant Garamond",serif;
-    font-size:1.7rem;
+.memory-card-game:hover{
+    transform:translateY(-3px);
 }
 
-.memory-back{
-    background:rgba(255,255,255,.9);
-    transform:rotateY(180deg);
-    font-size:2rem;
+.memory-card-game.flipped{
+    background:#fff;
 }
 
-/* RIDDLE */
+.memory-card-game.matched{
+    background:#e7ddd8;
+    pointer-events:none;
+}
 
 .riddle-box{
-    margin-top:30px;
-    padding:30px;
-    border-radius:24px;
-    background:rgba(255,250,245,.72);
+    max-width:650px;
+    margin:0 auto;
 }
 
 .riddle-question{
     font-family:"Cormorant Garamond",serif;
-    font-size:2rem;
-    line-height:1.25;
+    font-size:35px;
+    line-height:1.3;
     margin-bottom:25px;
 }
 
 .code-input{
-    width:180px;
-    padding:15px 18px;
-    border:1px solid rgba(58,46,57,.15);
+    width:100%;
+    padding:18px 20px;
+    border:1px solid rgba(60,48,64,.15);
     border-radius:15px;
-    background:#fff;
-    text-align:center;
-    font-size:1.2rem;
-    letter-spacing:.2em;
+    background:white;
     outline:none;
+    text-align:center;
+    font-size:22px;
+    letter-spacing:5px;
+    margin-bottom:15px;
 }
 
 .code-input:focus{
-    border-color:var(--rose-dark);
-    box-shadow:0 0 0 4px rgba(201,133,145,.1);
+    border-color:var(--gold);
+    box-shadow:0 0 0 4px rgba(197,164,109,.1);
 }
 
-/* DOOR */
+.feedback{
+    min-height:28px;
+    margin-top:15px;
+    color:var(--muted);
+}
 
 .door-section{
+    flex-direction:column;
     text-align:center;
 }
 
 .door{
-    width:240px;
-    height:360px;
+    width:180px;
+    height:270px;
+    border-radius:90px 90px 10px 10px;
+    background:linear-gradient(135deg,#5b4857,#302535);
+    box-shadow:0 25px 70px rgba(60,48,64,.25);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:45px;
     margin:30px auto;
-    border-radius:130px 130px 18px 18px;
-    background:
-        linear-gradient(135deg,#ead3bd,#b98774);
-    box-shadow:
-        inset 10px 0 25px rgba(255,255,255,.2),
-        inset -15px 0 30px rgba(80,45,45,.12),
-        0 30px 60px rgba(70,45,50,.2);
-    position:relative;
-    cursor:pointer;
-    transition:.7s ease;
+    transition:.5s;
 }
 
-.door:before{
-    content:"";
-    position:absolute;
-    inset:20px;
-    border:1px solid rgba(255,255,255,.35);
-    border-radius:115px 115px 12px 12px;
+.door:hover{
+    transform:scale(1.04);
 }
-
-.door-knob{
-    position:absolute;
-    right:35px;
-    top:52%;
-    width:15px;
-    height:15px;
-    border-radius:50%;
-    background:var(--gold);
-    box-shadow:0 0 15px rgba(201,163,95,.5);
-}
-
-.door.open{
-    transform:perspective(900px) rotateY(-65deg);
-    transform-origin:left;
-    opacity:.7;
-}
-
-/* LETTER */
 
 .letter-section{
-    min-height:100vh;
-    display:none;
-}
-
-.letter-section.visible{
-    display:flex;
+    flex-direction:column;
+    text-align:center;
+    background:
+        radial-gradient(circle at 20% 30%,rgba(233,197,196,.35),transparent 30%),
+        radial-gradient(circle at 80% 70%,rgba(207,201,231,.4),transparent 35%);
 }
 
 .letter{
     width:min(850px,100%);
-    padding:45px;
-    background:
-        linear-gradient(rgba(255,255,255,.92),rgba(255,250,245,.92));
-    border-radius:10px;
-    box-shadow:
-        0 30px 90px rgba(72,47,62,.18);
+    background:#fffdf9;
+    padding:55px;
+    border-radius:8px;
+    box-shadow:0 30px 90px rgba(60,48,64,.2);
     position:relative;
 }
 
-.letter:before{
+.letter::before{
     content:"";
     position:absolute;
-    inset:12px;
-    border:1px solid rgba(201,163,95,.35);
+    inset:15px;
+    border:1px solid rgba(197,164,109,.3);
     pointer-events:none;
 }
 
-.letter-header{
-    text-align:center;
+.letter h2{
+    font-family:"Cormorant Garamond",serif;
+    font-size:65px;
+    font-weight:500;
     margin-bottom:30px;
 }
 
-.letter-header h2{
+.letter p{
     font-family:"Cormorant Garamond",serif;
-    font-size:3.5rem;
+    font-size:23px;
+    line-height:1.8;
+    color:#574b53;
+    text-align:left;
 }
 
-.photo-grid{
+.photos{
     display:grid;
     grid-template-columns:repeat(4,1fr);
-    gap:10px;
-    margin-bottom:35px;
+    gap:12px;
+    margin:30px 0;
 }
 
-.photo-grid img{
+.photos img{
     width:100%;
-    aspect-ratio:1;
+    height:180px;
     object-fit:cover;
-    border-radius:12px;
+    border-radius:15px;
 }
 
-.letter-body{
-    color:var(--soft-ink);
-    line-height:2;
-    font-size:.96rem;
-}
-
-.letter-signature{
+.proposal{
     margin-top:30px;
+    padding-top:30px;
+    border-top:1px solid rgba(60,48,64,.1);
+}
+
+.proposal h3{
     font-family:"Cormorant Garamond",serif;
-    font-size:1.7rem;
-    color:var(--ink);
+    font-size:40px;
+    margin-bottom:25px;
 }
 
-.proposal-box{
-    margin-top:35px;
-    padding:30px;
-    border-radius:22px;
-    text-align:center;
-    background:linear-gradient(135deg,rgba(233,185,189,.24),rgba(207,197,231,.25));
-}
-
-.proposal-box h3{
-    font-family:"Cormorant Garamond",serif;
-    font-size:2.4rem;
-    margin-bottom:20px;
-}
-
-.proposal-buttons{
+.response-buttons{
     display:flex;
+    gap:15px;
     justify-content:center;
     flex-wrap:wrap;
-    gap:12px;
-}
-
-.yes-button,
-.time-button{
-    border:none;
-    padding:14px 23px;
-    border-radius:999px;
-    cursor:pointer;
-    font-weight:700;
-    transition:.3s ease;
 }
 
 .yes-button{
-    background:var(--rose-dark);
+    padding:15px 35px;
+    border-radius:999px;
+    background:var(--deep);
     color:white;
+    transition:.3s;
 }
 
-.time-button{
-    background:white;
-    color:var(--ink);
-}
-
-.yes-button:hover,
-.time-button:hover{
+.yes-button:hover{
     transform:translateY(-3px);
 }
 
-.response-message{
-    margin-top:20px;
-    min-height:25px;
-    font-family:"Cormorant Garamond",serif;
-    font-size:1.4rem;
-}
-
-/* CONFETTI */
-
-.confetti{
-    position:fixed;
-    width:8px;
-    height:12px;
-    top:-20px;
-    z-index:300;
-    pointer-events:none;
-    animation:fall 3s linear forwards;
-}
-
-@keyframes fall{
-    to{
-        transform:translate3d(var(--x),110vh,0) rotate(720deg);
-        opacity:0;
-    }
-}
-
-/* FOOTER */
-
-.final-actions{
-    margin-top:35px;
-    display:flex;
-    justify-content:center;
-    gap:12px;
-    flex-wrap:wrap;
-}
-
-.secondary-button{
-    border:1px solid rgba(58,46,57,.15);
-    background:rgba(255,255,255,.7);
-    padding:13px 22px;
+.time-button{
+    padding:15px 35px;
     border-radius:999px;
-    cursor:pointer;
-    color:var(--ink);
+    background:#eee5e2;
+    color:var(--deep);
 }
 
-/* RESPONSIVE */
+.restart{
+    margin-top:35px;
+    background:transparent;
+    color:var(--muted);
+    text-decoration:underline;
+}
 
-@media(max-width:700px){
+#toast{
+    position:fixed;
+    left:50%;
+    bottom:90px;
+    transform:translateX(-50%) translateY(20px);
+    background:rgba(60,48,64,.94);
+    color:white;
+    padding:12px 20px;
+    border-radius:999px;
+    z-index:300;
+    opacity:0;
+    pointer-events:none;
+    transition:.35s;
+    font-size:13px;
+    text-align:center;
+    max-width:90%;
+}
 
-    .top-nav{
-        padding:16px 20px;
+#toast.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+}
+
+#jsStatus{
+    position:fixed;
+    left:10px;
+    bottom:10px;
+    padding:6px 10px;
+    border-radius:8px;
+    background:rgba(60,48,64,.85);
+    color:white;
+    font-size:10px;
+    z-index:500;
+    opacity:.65;
+    pointer-events:none;
+}
+
+@media(max-width:800px){
+    nav{
+        padding:0 5%;
     }
 
-    .brand{
-        font-size:.95rem;
+    .logo{
+        font-size:18px;
+        letter-spacing:2px;
     }
 
     section{
-        padding:100px 20px 70px;
+        padding:100px 5%;
     }
 
     .hero-orbit{
-        width:330px;
-        height:330px;
-    }
-
-    .game-card{
-        padding:25px 18px;
-    }
-
-    .game-card h2{
-        font-size:2.6rem;
-    }
-
-    .star-field{
-        height:320px;
+        width:360px;
+        height:360px;
     }
 
     .memory-card{
         grid-template-columns:1fr;
-        padding:15px;
+        gap:25px;
     }
 
-    .memory-text{
-        padding:10px 5px 20px;
+    .memory-image{
+        height:350px;
     }
 
     .memory-text h2{
-        font-size:2.2rem;
+        font-size:45px;
     }
 
-    .match-board{
-        gap:9px;
+    .game-container{
+        padding:25px 18px;
+    }
+
+    .game-title{
+        font-size:43px;
+    }
+
+    .star-board{
+        height:330px;
     }
 
     .letter{
-        padding:30px 20px;
+        padding:35px 22px;
     }
 
-    .photo-grid{
+    .letter h2{
+        font-size:50px;
+    }
+
+    .letter p{
+        font-size:20px;
+    }
+
+    .photos{
         grid-template-columns:repeat(2,1fr);
     }
 
-    .letter-header h2{
-        font-size:2.8rem;
-    }
-
-    .door{
-        width:200px;
-        height:310px;
-    }
-
-    .music-toast{
-        right:16px;
-        bottom:84px;
-        max-width:240px;
-    }
-}
-
-@media(max-width:400px){
-    .title{
-        font-size:3.2rem;
-    }
-
-    .star-field{
-        height:290px;
+    .photos img{
+        height:150px;
     }
 }
 </style>
@@ -809,95 +638,77 @@ section{
 
 <canvas id="ambientCanvas"></canvas>
 
-<!-- BACKGROUND MUSIC
-     Put violin_ringtone.mp3 in the SAME folder as this Index.html
--->
+<nav>
+    <div class="logo">OUR_LITTLEWEB</div>
+
+    <div class="progress">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
+</nav>
+
+<button id="bgm-btn" type="button" aria-label="Music">🎻</button>
+
+<div id="toast"></div>
+
+<div id="jsStatus">Starting…</div>
+
 <audio id="bgm-audio" loop preload="auto">
     <source src="./violin_ringtone.mp3" type="audio/mpeg">
 </audio>
 
-<div id="music-toast" class="music-toast">
-    Music could not be loaded.<br>
-    Make sure <b>violin_ringtone.mp3</b> is in the same folder as Index.html.
-</div>
-
-<button
-    id="bgm-toggle-btn"
-    class="bgm-button"
-    aria-label="Toggle background music">
-    🎻
-</button>
-
-<div id="app">
-
-<!-- NAV -->
-
-<nav class="top-nav">
-    <div class="brand">OUR_LITTLEWEB</div>
-
-    <div class="progress-dots">
-        <span class="progress-dot active" data-step="0"></span>
-        <span class="progress-dot" data-step="1"></span>
-        <span class="progress-dot" data-step="2"></span>
-        <span class="progress-dot" data-step="3"></span>
-        <span class="progress-dot" data-step="4"></span>
-        <span class="progress-dot" data-step="5"></span>
-        <span class="progress-dot" data-step="6"></span>
-    </div>
-</nav>
-
-
 <!-- HERO -->
-
-<section id="sec-home" class="hero">
+<section class="hero" id="sec-home">
 
     <div class="hero-orbit"></div>
 
-    <div class="container hero-content">
+    <div class="hero-content">
 
-        <div class="eyebrow">A tiny world made for two</div>
+        <div class="eyebrow">A little journey made for two</div>
 
-        <h1 class="title">
-            Our Little<br>
-            World
-        </h1>
+        <h1>Our<br>Little World</h1>
 
-        <p class="subtitle">
-            A little journey through memories, moments,
-            tiny games and one final surprise.
+        <p class="hero-sub">
+            Some memories deserve more than words.
+            So I made a tiny world where every step
+            tells a part of our story.
         </p>
 
-        <button id="btn-begin" class="primary-button">
+        <button class="primary-button" id="btn-begin" type="button">
             BEGIN THE JOURNEY
+            <span>→</span>
         </button>
 
     </div>
+
 </section>
 
 
 <!-- MEMORY 1 -->
-
-<section class="memory" id="memory-1">
+<section class="memory" id="sec-memory-1">
 
     <div class="memory-card">
 
         <img
             class="memory-image"
-            src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=1000&q=85"
-            alt="Romantic memory">
+            src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=1200&q=80"
+            alt="Memory">
 
         <div class="memory-text">
-            <div class="eyebrow">Chapter One</div>
 
-            <h2>
-                Every story starts somewhere.
-            </h2>
+            <div class="memory-number">MEMORY 01</div>
+
+            <h2>It started<br>somewhere.</h2>
 
             <p>
-                Before reaching the final surprise,
-                there are a few little moments waiting
-                to be discovered.
+                Every beautiful story has a beginning.
+                Maybe ours didn't feel extraordinary at first,
+                but somehow it became something worth remembering.
             </p>
+
         </div>
 
     </div>
@@ -906,31 +717,30 @@ section{
 
 
 <!-- GAME 1 -->
+<section class="game-section" id="sec-game-1">
 
-<section id="sec-game-1" class="game-section">
+    <div class="game-container">
 
-    <div class="game-card">
+        <div class="game-label">LEVEL 01</div>
 
-        <div class="game-number">01 / 03</div>
+        <div class="game-title">Catch the stars</div>
 
-        <h2>Catch the Stars</h2>
-
-        <p>
-            Four little stars are hiding inside this world.
-            Find and tap every one of them.
+        <p class="game-description">
+            Four little stars are hiding in our world.
+            Catch them all to continue.
         </p>
 
-        <div class="star-field" id="starField">
+        <div class="star-board" id="star-board">
 
-            <button class="star" data-star="1">✦</button>
-            <button class="star" data-star="2">✦</button>
-            <button class="star" data-star="3">✦</button>
-            <button class="star" data-star="4">✦</button>
+            <button class="star" style="left:12%;top:20%;" type="button">✦</button>
+            <button class="star" style="left:72%;top:18%;" type="button">✦</button>
+            <button class="star" style="left:43%;top:60%;" type="button">✦</button>
+            <button class="star" style="left:82%;top:70%;" type="button">✦</button>
 
         </div>
 
-        <div class="game-status" id="starStatus">
-            0 / 4 stars found
+        <div class="counter">
+            Stars found: <span id="star-count">0</span> / 4
         </div>
 
     </div>
@@ -939,29 +749,26 @@ section{
 
 
 <!-- MEMORY 2 -->
-
-<section class="memory">
+<section class="memory" id="sec-memory-2">
 
     <div class="memory-card">
 
         <div class="memory-text">
 
-            <div class="eyebrow">A little further</div>
+            <div class="memory-number">MEMORY 02</div>
 
-            <h2>
-                Some memories deserve another look.
-            </h2>
+            <h2>Little things<br>matter.</h2>
 
             <p>
-                Keep going. The next little challenge
-                is waiting for you.
+                The tiny moments are often the ones
+                that stay with us the longest.
             </p>
 
         </div>
 
         <img
             class="memory-image"
-            src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=1000&q=85"
+            src="https://images.unsplash.com/photo-1494774157365-9e04c6720e47?auto=format&fit=crop&w=1200&q=80"
             alt="Memory">
 
     </div>
@@ -970,23 +777,23 @@ section{
 
 
 <!-- GAME 2 -->
+<section class="game-section" id="sec-game-2">
 
-<section id="sec-game-2" class="game-section">
+    <div class="game-container">
 
-    <div class="game-card">
+        <div class="game-label">LEVEL 02</div>
 
-        <div class="game-number">02 / 03</div>
+        <div class="game-title">Remember us</div>
 
-        <h2>Memory Match</h2>
-
-        <p>
+        <p class="game-description">
             Find all three matching pairs.
         </p>
 
-        <div class="match-board" id="matchBoard"></div>
+        <div class="match-board" id="match-board"></div>
 
-        <div class="game-status" id="matchStatus">
-            0 / 3 pairs matched
+        <div class="counter">
+            Pairs found:
+            <span id="pairs-count">0</span> / 3
         </div>
 
     </div>
@@ -995,27 +802,24 @@ section{
 
 
 <!-- MEMORY 3 -->
-
-<section class="memory">
+<section class="memory" id="sec-memory-3">
 
     <div class="memory-card">
 
         <img
             class="memory-image"
-            src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=1000&q=85"
+            src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=1200&q=80"
             alt="Memory">
 
         <div class="memory-text">
 
-            <div class="eyebrow">One more secret</div>
+            <div class="memory-number">MEMORY 03</div>
 
-            <h2>
-                The final lock is waiting.
-            </h2>
+            <h2>And then<br>there was us.</h2>
 
             <p>
-                One small riddle stands between you
-                and the final door.
+                Somewhere between all the ordinary moments,
+                something became special.
             </p>
 
         </div>
@@ -1026,44 +830,44 @@ section{
 
 
 <!-- GAME 3 -->
+<section class="game-section" id="sec-game-3">
 
-<section id="sec-game-3" class="game-section">
+    <div class="game-container">
 
-    <div class="game-card">
+        <div class="game-label">FINAL LEVEL</div>
 
-        <div class="game-number">03 / 03</div>
+        <div class="game-title">A little secret</div>
 
-        <h2>The Riddle Lock</h2>
-
-        <p>
-            Solve the little clue and enter the
-            secret three-digit code.
+        <p class="game-description">
+            Solve the riddle to unlock the final door.
         </p>
 
         <div class="riddle-box">
 
             <div class="riddle-question">
-                I am made from three little numbers,
-                and together they mean something special.
-                What am I?
+                What number represents the letters
+                I, Love, You?
             </div>
 
             <input
-                id="codeInput"
+                id="code-input"
                 class="code-input"
-                type="tel"
+                type="text"
                 inputmode="numeric"
                 maxlength="3"
-                placeholder="•••"
+                placeholder="___"
+                autocomplete="off"
             >
 
-            <br>
-
-            <button id="unlockBtn" class="primary-button">
+            <button
+                class="primary-button"
+                id="unlock-btn"
+                type="button"
+            >
                 UNLOCK
             </button>
 
-            <div id="riddleStatus" class="game-status"></div>
+            <div class="feedback" id="riddle-feedback"></div>
 
         </div>
 
@@ -1072,202 +876,218 @@ section{
 </section>
 
 
-<!-- FINAL MEMORY -->
+<!-- DOOR -->
+<section class="door-section" id="sec-door">
 
-<section class="memory">
+    <div class="eyebrow">YOU MADE IT</div>
 
-    <div class="memory-card">
+    <h2 class="game-title">
+        There is one more thing.
+    </h2>
 
-        <div class="memory-text">
-
-            <div class="eyebrow">Almost there</div>
-
-            <h2>
-                You found every little piece.
-            </h2>
-
-            <p>
-                There is only one thing left to open.
-            </p>
-
-        </div>
-
-        <img
-            class="memory-image"
-            src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=1000&q=85"
-            alt="Final memory">
-
+    <div class="door" id="final-door">
+        ♡
     </div>
 
-</section>
-
-
-<!-- FINAL DOOR -->
-
-<section id="sec-door" class="door-section">
-
-    <div class="container">
-
-        <div class="eyebrow">The final chapter</div>
-
-        <h2 class="title" style="font-size:clamp(3rem,7vw,5.5rem);">
-            One last door.
-        </h2>
-
-        <p class="subtitle" style="margin-left:auto;margin-right:auto;text-align:center;">
-            You've made it all the way here.
-            Open it when you're ready.
-        </p>
-
-        <div
-            id="finalDoor"
-            class="door"
-            role="button"
-            tabindex="0"
-            aria-label="Open final door">
-
-            <div class="door-knob"></div>
-
-        </div>
-
-        <div id="doorHint" class="game-status">
-            Tap the door to open it
-        </div>
-
-    </div>
+    <button
+        class="primary-button"
+        id="open-door-btn"
+        type="button"
+    >
+        OPEN THE DOOR →
+    </button>
 
 </section>
 
 
 <!-- LETTER -->
-
-<section id="sec-letter" class="letter-section">
+<section class="letter-section" id="sec-letter">
 
     <div class="letter">
 
-        <div class="letter-header">
+        <div class="eyebrow">A LETTER FOR YOU</div>
 
-            <div class="eyebrow">
-                A little letter
-            </div>
+        <h2>Dear You,</h2>
 
-            <h2>
-                For You
-            </h2>
-
-        </div>
-
-        <div class="photo-grid">
+        <div class="photos">
 
             <img
-                src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=600&q=85"
+                src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=600&q=80"
                 alt="Memory photo">
 
             <img
-                src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=600&q=85"
+                src="https://images.unsplash.com/photo-1494774157365-9e04c6720e47?auto=format&fit=crop&w=600&q=80"
                 alt="Memory photo">
 
             <img
-                src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=600&q=85"
+                src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=600&q=80"
                 alt="Memory photo">
 
             <img
-                src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=600&q=85"
+                src="https://images.unsplash.com/photo-1518621736915-f3b1c41bfd00?auto=format&fit=crop&w=600&q=80"
                 alt="Memory photo">
 
         </div>
 
-        <div class="letter-body">
+        <p>
+            I could have written a normal message,
+            but somehow a normal message didn't feel enough.
+        </p>
 
-            <p>
-                <!-- Replace this paragraph with your own personal message. -->
-                This little world was made from memories,
-                moments and all the small things that make
-                a story special.
-            </p>
+        <br>
 
-            <br>
+        <p>
+            So I made this little world instead.
+            Every level, every memory and every tiny detail
+            is here for one simple reason:
+            to remind you how special you are to me.
+        </p>
 
-            <p>
-                <!-- Replace this with your own message. -->
-                Thank you for being part of this journey.
-                There is one question left at the end of it.
-            </p>
+        <br>
 
-            <div class="letter-signature">
-                — Your Name
-            </div>
+        <p>
+            And now that you've reached the end,
+            there is something I've been wanting to ask.
+        </p>
 
-        </div>
-
-
-        <div class="proposal-box">
+        <div class="proposal">
 
             <h3>
-                Will you be part of my next chapter?
+                Will you make more beautiful memories with me?
             </h3>
 
-            <div class="proposal-buttons">
+            <div class="response-buttons">
 
                 <button
-                    id="yesBtn"
-                    class="yes-button">
-                    YES ✨
+                    class="yes-button"
+                    id="yes-btn"
+                    type="button"
+                >
+                    YES ♡
                 </button>
 
                 <button
-                    id="timeBtn"
-                    class="time-button">
+                    class="time-button"
+                    id="time-btn"
+                    type="button"
+                >
                     I NEED A LITTLE TIME
                 </button>
 
             </div>
 
-            <div
-                id="responseMessage"
-                class="response-message">
-            </div>
-
         </div>
 
-
-        <div class="final-actions">
-
-            <button
-                id="restartBtn"
-                class="secondary-button">
-                ↻ Restart Journey
-            </button>
-
-        </div>
+        <button
+            class="restart"
+            id="restart-btn"
+            type="button"
+        >
+            Start the journey again
+        </button>
 
     </div>
 
 </section>
 
-</div>
-
 
 <script>
+/* =========================================================
+   OUR LITTLE WORLD
+   ROBUST MOBILE / VERCEL VERSION
+   ========================================================= */
+
+(function(){
+
+"use strict";
+
+const statusBox = document.getElementById("jsStatus");
+
+function setStatus(text){
+    if(statusBox){
+        statusBox.textContent = text;
+    }
+}
+
+/* Catch JavaScript errors and show them on screen */
+window.addEventListener("error", function(event){
+
+    console.error(event.error || event.message);
+
+    setStatus("JS error");
+
+    showToast(
+        "Something went wrong. Reload the page and try again."
+    );
+
+});
+
+/* Toast */
+function showToast(message){
+
+    const toast = document.getElementById("toast");
+
+    if(!toast) return;
+
+    toast.textContent = message;
+    toast.classList.add("show");
+
+    clearTimeout(window.__toastTimer);
+
+    window.__toastTimer = setTimeout(function(){
+        toast.classList.remove("show");
+    },3500);
+}
+
 
 /* =========================================================
-   BACKGROUND MUSIC
+   ELEMENTS
    ========================================================= */
 
 const audio = document.getElementById("bgm-audio");
-const bgmBtn = document.getElementById("bgm-toggle-btn");
-const musicToast = document.getElementById("music-toast");
+const bgmBtn = document.getElementById("bgm-btn");
 
-let musicToastTimer = null;
+const beginBtn = document.getElementById("btn-begin");
+
+const starBoard = document.getElementById("star-board");
+const starCountElement = document.getElementById("star-count");
+
+const matchBoard = document.getElementById("match-board");
+const pairsCountElement = document.getElementById("pairs-count");
+
+const codeInput = document.getElementById("code-input");
+const unlockBtn = document.getElementById("unlock-btn");
+const riddleFeedback = document.getElementById("riddle-feedback");
+
+const openDoorBtn = document.getElementById("open-door-btn");
+const finalDoor = document.getElementById("final-door");
+
+const yesBtn = document.getElementById("yes-btn");
+const timeBtn = document.getElementById("time-btn");
+const restartBtn = document.getElementById("restart-btn");
 
 
-/*
-   This function is intentionally called after a real
-   user interaction such as tapping BEGIN THE JOURNEY.
-*/
-async function playAudioStream(){
+/* =========================================================
+   MUSIC
+   ========================================================= */
+
+let isPlayingAudio = false;
+
+async function playMusic(){
+
+    if(!audio){
+        showToast("Music player not found.");
+        return;
+    }
 
     try{
+
+        audio.volume = 0.65;
+
+        /*
+         * Reload only if the audio has not loaded yet.
+         * Calling load() every time can cause problems on mobile.
+         */
 
         if(audio.readyState === 0){
             audio.load();
@@ -1275,182 +1095,93 @@ async function playAudioStream(){
 
         await audio.play();
 
-        bgmBtn.classList.add("playing");
-        bgmBtn.textContent = "🎶";
+        isPlayingAudio = true;
+
+        if(bgmBtn){
+            bgmBtn.classList.add("playing");
+            bgmBtn.textContent = "🎶";
+        }
+
+        showToast("Music playing ♡");
 
     }catch(error){
 
-        console.warn(
-            "Music could not start:",
-            error
-        );
+        console.error("Audio error:",error);
 
+        isPlayingAudio = false;
+
+        if(bgmBtn){
+            bgmBtn.classList.remove("playing");
+            bgmBtn.textContent = "🎻";
+        }
+
+        showToast(
+            "Music couldn't start. Check that violin_ringtone.mp3 is in your GitHub repo."
+        );
+    }
+}
+
+
+function pauseMusic(){
+
+    if(!audio) return;
+
+    audio.pause();
+
+    isPlayingAudio = false;
+
+    if(bgmBtn){
         bgmBtn.classList.remove("playing");
         bgmBtn.textContent = "🎻";
-
-        showMusicError();
     }
 }
 
 
-function showMusicError(){
+if(bgmBtn){
 
-    musicToast.classList.add("show");
+    bgmBtn.addEventListener("click",function(){
 
-    clearTimeout(musicToastTimer);
-
-    musicToastTimer = setTimeout(()=>{
-        musicToast.classList.remove("show");
-    },4000);
-}
-
-
-bgmBtn.addEventListener("click", async ()=>{
-
-    if(!audio.paused){
-
-        audio.pause();
-
-        bgmBtn.classList.remove("playing");
-        bgmBtn.textContent = "🎻";
-
-    }else{
-
-        await playAudioStream();
-
-    }
-
-});
-
-
-audio.addEventListener("error",()=>{
-
-    console.warn(
-        "Could not load ./violin_ringtone.mp3"
-    );
-
-});
-
-
-/* =========================================================
-   AMBIENT PARTICLES
-   ========================================================= */
-
-const canvas = document.getElementById("ambientCanvas");
-const ctx = canvas.getContext("2d");
-
-let particles = [];
-
-function resizeCanvas(){
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-}
-
-resizeCanvas();
-
-window.addEventListener("resize",resizeCanvas);
-
-
-function createParticles(){
-
-    particles = [];
-
-    const count = Math.min(
-        65,
-        Math.floor(window.innerWidth / 12)
-    );
-
-    for(let i=0;i<count;i++){
-
-        particles.push({
-
-            x:Math.random()*canvas.width,
-            y:Math.random()*canvas.height,
-
-            r:Math.random()*2+0.5,
-
-            speed:Math.random()*0.25+0.05,
-
-            alpha:Math.random()*.3+.08,
-
-            drift:(Math.random()-.5)*.2
-
-        });
-
-    }
-
-}
-
-createParticles();
-
-
-function animateParticles(){
-
-    ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-
-    particles.forEach(p=>{
-
-        p.y -= p.speed;
-        p.x += p.drift;
-
-        if(p.y < -10){
-            p.y = canvas.height+10;
+        if(isPlayingAudio){
+            pauseMusic();
+        }else{
+            playMusic();
         }
-
-        if(p.x < -10){
-            p.x = canvas.width+10;
-        }
-
-        if(p.x > canvas.width+10){
-            p.x = -10;
-        }
-
-        ctx.beginPath();
-
-        ctx.arc(
-            p.x,
-            p.y,
-            p.r,
-            0,
-            Math.PI*2
-        );
-
-        ctx.fillStyle =
-            `rgba(201,163,95,${p.alpha})`;
-
-        ctx.fill();
 
     });
 
-    requestAnimationFrame(animateParticles);
+}
+
+
+/*
+ * Important:
+ * Browser/mobile autoplay restrictions allow audio
+ * after the user performs a click.
+ */
+
+if(beginBtn){
+
+    beginBtn.addEventListener("click",function(){
+
+        playMusic();
+
+        scrollToSection("sec-game-1");
+
+    });
 
 }
 
-animateParticles();
 
+/* Detect missing MP3 */
+if(audio){
 
-/* =========================================================
-   PROGRESS
-   ========================================================= */
+    audio.addEventListener("error",function(){
 
-const dots =
-    document.querySelectorAll(".progress-dot");
+        console.error(
+            "Could not load ./violin_ringtone.mp3"
+        );
 
-
-function updateProgress(step){
-
-    dots.forEach((dot,index)=>{
-
-        dot.classList.toggle(
-            "active",
-            index <= step
+        showToast(
+            "MP3 not found. Check the exact GitHub filename."
         );
 
     });
@@ -1458,54 +1189,13 @@ function updateProgress(step){
 }
 
 
-function saveProgress(step){
-
-    try{
-        localStorage.setItem(
-            "ourLittleWorldProgress",
-            String(step)
-        );
-    }catch(e){}
-
-    updateProgress(step);
-
-}
-
-
-function loadProgress(){
-
-    try{
-
-        const saved =
-            parseInt(
-                localStorage.getItem(
-                    "ourLittleWorldProgress"
-                ) || "0"
-            );
-
-        updateProgress(
-            Number.isNaN(saved) ? 0 : saved
-        );
-
-    }catch(e){
-
-        updateProgress(0);
-
-    }
-
-}
-
-loadProgress();
-
-
 /* =========================================================
-   SECTION SCROLL
+   NAVIGATION
    ========================================================= */
 
 function scrollToSection(id){
 
-    const element =
-        document.getElementById(id);
+    const element = document.getElementById(id);
 
     if(!element) return;
 
@@ -1518,144 +1208,159 @@ function scrollToSection(id){
 
 
 /* =========================================================
-   BEGIN JOURNEY
+   PROGRESS DOTS
    ========================================================= */
 
-document
-.getElementById("btn-begin")
-.addEventListener("click",async ()=>{
+const sections = [
+    "sec-home",
+    "sec-game-1",
+    "sec-game-2",
+    "sec-game-3",
+    "sec-letter"
+];
 
-    saveProgress(1);
+const dots = document.querySelectorAll(".dot");
 
-    /*
-       IMPORTANT:
-       The music starts here because this click is a
-       genuine user interaction on mobile.
-    */
-    await playAudioStream();
+function updateProgress(){
 
-    scrollToSection("sec-game-1");
+    let currentIndex = 0;
 
-});
+    sections.forEach(function(id,index){
 
+        const element = document.getElementById(id);
 
-/* =========================================================
-   STAR CATCHER
-   ========================================================= */
+        if(!element) return;
 
-const stars =
-    document.querySelectorAll(".star");
+        const rect = element.getBoundingClientRect();
 
-const starStatus =
-    document.getElementById("starStatus");
-
-let starsCaught = 0;
-
-
-stars.forEach(star=>{
-
-    star.addEventListener("click",()=>{
-
-        if(star.classList.contains("caught")){
-            return;
-        }
-
-        star.classList.add("caught");
-
-        starsCaught++;
-
-        starStatus.textContent =
-            `${starsCaught} / 4 stars found`;
-
-        if(starsCaught === 4){
-
-            starStatus.textContent =
-                "All the stars are yours ✨";
-
-            saveProgress(2);
-
+        if(rect.top <= window.innerHeight * 0.45){
+            currentIndex = index;
         }
 
     });
 
-});
+    dots.forEach(function(dot,index){
+
+        dot.classList.toggle(
+            "active",
+            index === currentIndex
+        );
+
+    });
+
+}
+
+window.addEventListener(
+    "scroll",
+    updateProgress,
+    {passive:true}
+);
 
 
 /* =========================================================
-   MEMORY MATCH
+   STAR GAME
    ========================================================= */
 
-const matchBoard =
-    document.getElementById("matchBoard");
+let starsFound = 0;
 
-const matchStatus =
-    document.getElementById("matchStatus");
+if(starBoard){
 
+    const stars = starBoard.querySelectorAll(".star");
 
-const symbols = [
-    "♡",
-    "✦",
-    "∞",
-    "♡",
-    "✦",
-    "∞"
-];
+    stars.forEach(function(star){
 
+        star.addEventListener("click",function(){
 
-let firstCard = null;
-let secondCard = null;
-let lockBoard = false;
-let matchedPairs = 0;
+            if(star.classList.contains("caught")){
+                return;
+            }
 
+            star.classList.add("caught");
 
-function shuffle(array){
+            starsFound++;
 
-    const copy = [...array];
+            if(starCountElement){
+                starCountElement.textContent = starsFound;
+            }
 
-    for(
-        let i=copy.length-1;
-        i>0;
-        i--
-    ){
+            if(starsFound === stars.length){
 
-        const j =
-            Math.floor(Math.random()*(i+1));
+                showToast("You found all the stars ✦");
 
-        [copy[i],copy[j]] =
-            [copy[j],copy[i]];
+                setTimeout(function(){
+                    scrollToSection("sec-game-2");
+                },900);
 
-    }
+            }
 
-    return copy;
+        });
+
+    });
 
 }
 
 
-function createMatchBoard(){
+/* =========================================================
+   MEMORY MATCH GAME
+   ========================================================= */
+
+const symbols = ["♡","✦","☾","♡","✦","☾"];
+
+let firstCard = null;
+let secondCard = null;
+let lockBoard = false;
+let pairsFound = 0;
+
+function shuffle(array){
+
+    const arr = array.slice();
+
+    for(let i=arr.length-1;i>0;i--){
+
+        const j = Math.floor(Math.random()*(i+1));
+
+        [arr[i],arr[j]] = [arr[j],arr[i]];
+
+    }
+
+    return arr;
+}
+
+
+function createMatchGame(){
+
+    if(!matchBoard) return;
 
     matchBoard.innerHTML = "";
 
-    shuffle(symbols).forEach((symbol,index)=>{
+    firstCard = null;
+    secondCard = null;
+    lockBoard = false;
+    pairsFound = 0;
 
-        const card =
-            document.createElement("button");
+    if(pairsCountElement){
+        pairsCountElement.textContent = "0";
+    }
 
-        card.className =
-            "memory-card-game";
+    const shuffled = shuffle(symbols);
+
+    shuffled.forEach(function(symbol,index){
+
+        const card = document.createElement("button");
+
+        card.type = "button";
+        card.className = "memory-card-game";
 
         card.dataset.symbol = symbol;
+        card.dataset.index = index;
 
-        card.innerHTML = `
-            <div class="memory-inner">
-                <div class="memory-front">?</div>
-                <div class="memory-back">${symbol}</div>
-            </div>
-        `;
+        card.textContent = "?";
 
-        card.addEventListener(
-            "click",
-            ()=>flipCard(card)
-        );
+        card.addEventListener("click",function(){
+
+            handleCardClick(card);
+
+        });
 
         matchBoard.appendChild(card);
 
@@ -1663,18 +1368,17 @@ function createMatchBoard(){
 
 }
 
-createMatchBoard();
 
-
-function flipCard(card){
+function handleCardClick(card){
 
     if(lockBoard) return;
 
-    if(card === firstCard) return;
+    if(card.classList.contains("flipped")) return;
 
     if(card.classList.contains("matched")) return;
 
     card.classList.add("flipped");
+    card.textContent = card.dataset.symbol;
 
     if(!firstCard){
 
@@ -1685,277 +1389,191 @@ function flipCard(card){
 
     secondCard = card;
 
-    checkMatch();
+    lockBoard = true;
 
-}
+    const isMatch =
+        firstCard.dataset.symbol === secondCard.dataset.symbol;
 
-
-function checkMatch(){
-
-    const match =
-        firstCard.dataset.symbol ===
-        secondCard.dataset.symbol;
-
-    if(match){
+    if(isMatch){
 
         firstCard.classList.add("matched");
         secondCard.classList.add("matched");
 
-        matchedPairs++;
+        pairsFound++;
 
-        matchStatus.textContent =
-            `${matchedPairs} / 3 pairs matched`;
+        if(pairsCountElement){
+            pairsCountElement.textContent = pairsFound;
+        }
 
-        resetMatchCards();
+        firstCard = null;
+        secondCard = null;
+        lockBoard = false;
 
-        if(matchedPairs === 3){
+        if(pairsFound === 3){
 
-            matchStatus.textContent =
-                "Memory unlocked ✨";
+            showToast("All memories matched ♡");
 
-            saveProgress(3);
+            setTimeout(function(){
+                scrollToSection("sec-game-3");
+            },1000);
 
         }
 
     }else{
 
-        lockBoard = true;
+        setTimeout(function(){
 
-        setTimeout(()=>{
+            if(firstCard){
+                firstCard.classList.remove("flipped");
+                firstCard.textContent = "?";
+            }
 
-            firstCard.classList.remove("flipped");
-            secondCard.classList.remove("flipped");
+            if(secondCard){
+                secondCard.classList.remove("flipped");
+                secondCard.textContent = "?";
+            }
 
-            resetMatchCards();
-
-        },750);
-
-    }
-
-}
-
-
-function resetMatchCards(){
-
-    firstCard = null;
-    secondCard = null;
-    lockBoard = false;
-
-}
-
-
-/* =========================================================
-   RIDDLE LOCK
-   ========================================================= */
-
-const codeInput =
-    document.getElementById("codeInput");
-
-const unlockBtn =
-    document.getElementById("unlockBtn");
-
-const riddleStatus =
-    document.getElementById("riddleStatus");
-
-
-unlockBtn.addEventListener("click",()=>{
-
-    const code =
-        codeInput.value.trim();
-
-    if(code === "143"){
-
-        riddleStatus.textContent =
-            "Correct. The final path is open ✨";
-
-        riddleStatus.style.color =
-            "#8a5965";
-
-        saveProgress(4);
-
-        setTimeout(()=>{
-
-            scrollToSection("sec-door");
+            firstCard = null;
+            secondCard = null;
+            lockBoard = false;
 
         },700);
 
+    }
+
+}
+
+createMatchGame();
+
+
+/* =========================================================
+   RIDDLE
+   ========================================================= */
+
+function checkRiddle(){
+
+    if(!codeInput || !riddleFeedback) return;
+
+    const answer = codeInput.value.trim();
+
+    if(answer === "143"){
+
+        riddleFeedback.textContent =
+            "Unlocked. You remembered. ♡";
+
+        riddleFeedback.style.color = "#75614b";
+
+        showToast("The final door is waiting…");
+
+        setTimeout(function(){
+
+            scrollToSection("sec-door");
+
+        },1000);
+
     }else{
 
-        riddleStatus.textContent =
-            "Not quite. Try again.";
+        riddleFeedback.textContent =
+            "Not quite. Think about I + Love + You.";
 
-        riddleStatus.style.color =
-            "#9b6262";
-
-    }
-
-});
-
-
-codeInput.addEventListener("keydown",(event)=>{
-
-    if(event.key === "Enter"){
-
-        unlockBtn.click();
+        riddleFeedback.style.color = "#9a6868";
 
     }
 
-});
+}
+
+
+if(unlockBtn){
+
+    unlockBtn.addEventListener(
+        "click",
+        checkRiddle
+    );
+
+}
+
+
+if(codeInput){
+
+    codeInput.addEventListener(
+        "keydown",
+        function(event){
+
+            if(event.key === "Enter"){
+                checkRiddle();
+            }
+
+        }
+    );
+
+}
 
 
 /* =========================================================
    FINAL DOOR
    ========================================================= */
 
-const finalDoor =
-    document.getElementById("finalDoor");
+if(openDoorBtn){
 
-const doorHint =
-    document.getElementById("doorHint");
+    openDoorBtn.addEventListener(
+        "click",
+        function(){
 
-const letterSection =
-    document.getElementById("sec-letter");
+            if(finalDoor){
 
+                finalDoor.style.transform =
+                    "perspective(600px) rotateY(-70deg)";
 
-function openFinalDoor(){
+            }
 
-    if(finalDoor.classList.contains("open")){
-        return;
-    }
+            showToast("Welcome to the final page ♡");
 
-    finalDoor.classList.add("open");
+            setTimeout(function(){
 
-    doorHint.textContent =
-        "The final chapter is here ✨";
+                scrollToSection("sec-letter");
 
-    saveProgress(6);
+            },700);
 
-    if(audio.paused){
-        playAudioStream();
-    }
-
-    setTimeout(()=>{
-
-        letterSection.classList.add("visible");
-
-        saveProgress(7);
-
-        setTimeout(()=>{
-
-            scrollToSection("sec-letter");
-
-        },300);
-
-    },900);
+        }
+    );
 
 }
 
 
-finalDoor.addEventListener(
-    "click",
-    openFinalDoor
-);
+/* =========================================================
+   FINAL RESPONSE
+   ========================================================= */
 
+if(yesBtn){
 
-finalDoor.addEventListener(
-    "keydown",
-    event=>{
+    yesBtn.addEventListener(
+        "click",
+        function(){
 
-        if(
-            event.key === "Enter" ||
-            event.key === " "
-        ){
+            showCelebration();
 
-            event.preventDefault();
-
-            openFinalDoor();
+            showToast(
+                "A beautiful new chapter begins ♡"
+            );
 
         }
+    );
 
-    }
-);
-
-
-/* =========================================================
-   PROPOSAL RESPONSE
-   ========================================================= */
-
-const yesBtn =
-    document.getElementById("yesBtn");
-
-const timeBtn =
-    document.getElementById("timeBtn");
-
-const responseMessage =
-    document.getElementById("responseMessage");
+}
 
 
-yesBtn.addEventListener("click",()=>{
+if(timeBtn){
 
-    responseMessage.textContent =
-        "✨ Thank you for making it to the end. ✨";
+    timeBtn.addEventListener(
+        "click",
+        function(){
 
-    createConfetti();
+            showToast(
+                "Take all the time you need ♡"
+            );
 
-});
-
-
-timeBtn.addEventListener("click",()=>{
-
-    responseMessage.textContent =
-        "Take all the time you need. 🌷";
-
-});
-
-
-/* =========================================================
-   CONFETTI
-   ========================================================= */
-
-function createConfetti(){
-
-    const pieces = 90;
-
-    for(let i=0;i<pieces;i++){
-
-        const piece =
-            document.createElement("div");
-
-        piece.className = "confetti";
-
-        const x =
-            (Math.random()-.5)*window.innerWidth*1.4;
-
-        piece.style.left =
-            Math.random()*100+"vw";
-
-        piece.style.setProperty(
-            "--x",
-            `${x}px`
-        );
-
-        piece.style.animationDuration =
-            `${2+Math.random()*2}s`;
-
-        piece.style.animationDelay =
-            `${Math.random()*.7}s`;
-
-        piece.style.background =
-            [
-                "#e9b9bd",
-                "#cfc5e7",
-                "#c9a35f",
-                "#ffffff",
-                "#c98591"
-            ][Math.floor(Math.random()*5)];
-
-        document.body.appendChild(piece);
-
-        setTimeout(()=>{
-            piece.remove();
-        },4500);
-
-    }
+        }
+    );
 
 }
 
@@ -1964,38 +1582,277 @@ function createConfetti(){
    RESTART
    ========================================================= */
 
-document
-.getElementById("restartBtn")
-.addEventListener("click",()=>{
+if(restartBtn){
 
-    try{
-        localStorage.removeItem(
-            "ourLittleWorldProgress"
-        );
-    }catch(e){}
+    restartBtn.addEventListener(
+        "click",
+        function(){
 
-    location.reload();
+            window.scrollTo({
+                top:0,
+                behavior:"smooth"
+            });
 
-});
+            starsFound = 0;
+
+            if(starCountElement){
+                starCountElement.textContent = "0";
+            }
+
+            if(starBoard){
+
+                starBoard
+                    .querySelectorAll(".star")
+                    .forEach(function(star){
+
+                        star.classList.remove("caught");
+
+                    });
+
+            }
+
+            if(codeInput){
+                codeInput.value = "";
+            }
+
+            if(riddleFeedback){
+                riddleFeedback.textContent = "";
+            }
+
+            if(finalDoor){
+                finalDoor.style.transform = "";
+            }
+
+            createMatchGame();
+
+        }
+    );
+
+}
 
 
 /* =========================================================
-   IMAGE FALLBACK
+   CONFETTI
    ========================================================= */
 
-document.querySelectorAll("img").forEach(img=>{
+function showCelebration(){
 
-    img.addEventListener("error",()=>{
+    const canvas = document.createElement("canvas");
 
-        img.style.background =
-            "linear-gradient(135deg,#ead3d5,#ddd4e9)";
+    canvas.style.position = "fixed";
+    canvas.style.inset = "0";
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    canvas.style.pointerEvents = "none";
+    canvas.style.zIndex = "400";
 
-        img.removeAttribute("src");
+    document.body.appendChild(canvas);
 
-    });
+    const ctx = canvas.getContext("2d");
 
-});
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
+    const pieces = [];
+
+    for(let i=0;i<100;i++){
+
+        pieces.push({
+
+            x:Math.random()*canvas.width,
+            y:-20-Math.random()*canvas.height,
+            size:5+Math.random()*8,
+            speed:2+Math.random()*4,
+            rotation:Math.random()*Math.PI,
+            rotationSpeed:(Math.random()-.5)*.15
+
+        });
+
+    }
+
+    let frame = 0;
+
+    function animate(){
+
+        ctx.clearRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+        pieces.forEach(function(piece){
+
+            piece.y += piece.speed;
+            piece.rotation += piece.rotationSpeed;
+
+            ctx.save();
+
+            ctx.translate(
+                piece.x,
+                piece.y
+            );
+
+            ctx.rotate(
+                piece.rotation
+            );
+
+            ctx.globalAlpha =
+                Math.max(
+                    0,
+                    1 - piece.y/canvas.height
+                );
+
+            ctx.fillStyle =
+                ["#d9a7a0","#cfc9e7","#c5a46d","#756b73"]
+                [Math.floor(Math.random()*4)];
+
+            ctx.fillRect(
+                -piece.size/2,
+                -piece.size/2,
+                piece.size,
+                piece.size*1.5
+            );
+
+            ctx.restore();
+
+        });
+
+        frame++;
+
+        if(frame < 360){
+            requestAnimationFrame(animate);
+        }else{
+            canvas.remove();
+        }
+
+    }
+
+    animate();
+
+}
+
+
+/* =========================================================
+   AMBIENT PARTICLES
+   ========================================================= */
+
+const ambientCanvas =
+    document.getElementById("ambientCanvas");
+
+if(ambientCanvas){
+
+    const ctx =
+        ambientCanvas.getContext("2d");
+
+    function resizeCanvas(){
+
+        ambientCanvas.width =
+            window.innerWidth;
+
+        ambientCanvas.height =
+            window.innerHeight;
+
+    }
+
+    resizeCanvas();
+
+    window.addEventListener(
+        "resize",
+        resizeCanvas
+    );
+
+    const particles = [];
+
+    for(let i=0;i<45;i++){
+
+        particles.push({
+
+            x:Math.random()*window.innerWidth,
+            y:Math.random()*window.innerHeight,
+            r:1+Math.random()*2,
+            speed:.15+Math.random()*.45,
+            phase:Math.random()*Math.PI*2
+
+        });
+
+    }
+
+    function animateParticles(){
+
+        ctx.clearRect(
+            0,
+            0,
+            ambientCanvas.width,
+            ambientCanvas.height
+        );
+
+        particles.forEach(function(p){
+
+            p.y -= p.speed;
+
+            if(p.y < -10){
+                p.y = ambientCanvas.height + 10;
+            }
+
+            p.phase += .01;
+
+            const alpha =
+                .12 +
+                Math.sin(p.phase)*.06;
+
+            ctx.beginPath();
+
+            ctx.arc(
+                p.x,
+                p.y,
+                p.r,
+                0,
+                Math.PI*2
+            );
+
+            ctx.fillStyle =
+                "rgba(197,164,109," +
+                alpha +
+                ")";
+
+            ctx.fill();
+
+        });
+
+        requestAnimationFrame(
+            animateParticles
+        );
+
+    }
+
+    animateParticles();
+
+}
+
+
+/* =========================================================
+   READY
+   ========================================================= */
+
+setStatus("JS working ✓");
+
+setTimeout(function(){
+
+    if(statusBox){
+        statusBox.style.opacity = "0";
+        statusBox.style.transition = ".5s";
+    }
+
+},2500);
+
+updateProgress();
+
+console.log(
+    "Our Little World loaded successfully."
+);
+
+})();
 
 </script>
 
